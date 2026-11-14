@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #0d6941; outline-offset: 2px; border-radius: 6px; }
+.skip { position: absolute; left: 8px; top: -60px; z-index: 100; background: #10231b; color: #fff; padding: 10px 16px; border-radius: 999px; font-weight: 700; }
+.skip:focus { top: 8px; }
+body { @apply bg-ink-50 text-ink-900 antialiased; }
+h1, h2, h3 { @apply font-display; }
+
+@layer components {
+  .card { @apply rounded-xl2 bg-white p-4 shadow-card; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-bold transition active:scale-[.98] disabled:opacity-50; }
+  .btn-primary { @apply btn bg-pitch-600 text-white hover:bg-pitch-700; }
+  .btn-sun { @apply btn bg-sun-400 text-ink-900 hover:bg-sun-500; }
+  .btn-ghost { @apply btn bg-ink-100 text-ink-900 hover:bg-ink-300/50; }
+  .btn-danger { @apply btn bg-coral-100 text-coral-600 hover:bg-coral-500 hover:text-white; }
+  .btn-sm { @apply px-3.5 py-2 text-sm; }
+  .input { @apply w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-[15px] outline-none transition focus:border-pitch-500 focus:ring-2 focus:ring-pitch-200; }
+  .label { @apply mb-1.5 block text-sm font-bold text-ink-700; }
+  .chip { @apply inline-flex items-center gap-1 rounded-full bg-ink-100 px-3 py-1 text-xs font-bold text-ink-700; }
+  .chip-on { @apply bg-pitch-600 text-white; }
+  .h-title { @apply font-display text-xl font-extrabold tracking-tight; }
+  .muted { @apply text-sm text-ink-500; }
+  .choice { @apply cursor-pointer rounded-2xl border-2 border-ink-100 bg-white px-3 py-2.5 text-sm font-semibold text-ink-700 transition; }
+  .choice-wrap input:checked + .choice { @apply border-pitch-500 bg-pitch-50 text-pitch-800; }
+  .choice-wrap input { @apply sr-only; }
+  .choice-wrap input:focus-visible + .choice { @apply ring-2 ring-pitch-300; }
+}
+.prose-pp p { @apply mb-3 leading-relaxed text-ink-700; }
+.prose-pp strong { @apply text-ink-900; }
+.prose-pp ul { @apply mb-3 list-disc space-y-1 pl-5 text-ink-700; }
+.safe-b { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

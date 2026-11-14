@@ -1,0 +1,513 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PARENT
+  EDITOR // crée et modifie les contenus pédagogiques
+  MODERATOR // modère les contenus envoyés par les familles
+  SUPPORT // consulte les comptes et abonnements
+  ADMIN // tous les droits
+}
+
+enum PlanTier {
+  DECOUVERTE
+  ESSENTIEL
+  PREMIUM
+  FAMILLE
+}
+
+enum SubStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+enum SessionStatus {
+  PLANNED
+  DONE
+  SKIPPED // jamais présenté comme un échec
+  REST
+}
+
+enum EventType {
+  CLUB_TRAINING
+  MATCH
+  VACATION
+  REST
+}
+
+enum MediaStatus {
+  PRIVATE // souvenir visible uniquement par la famille
+  PENDING // proposé à la communauté, en attente de modération
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  firstName     String
+  role          Role      @default(PARENT)
+  beginnerMode  Boolean   @default(true) // mode parent débutant : tout est expliqué
+  notifPrefs    Json      @default("{\"frequency\":\"normal\",\"session\":true,\"report\":true,\"challenge\":true,\"rest\":true,\"guide\":true}")
+  consentAt     DateTime? // consentement RGPD du titulaire de l'autorité parentale
+  consentVersion String?
+  createdAt     DateTime  @default(now())
+  lastSeenAt    DateTime?
+  emailMarketing Boolean  @default(false) // conseils par e-mail : opt-in explicite, désinscription en un clic
+  failedLogins  Int       @default(0)
+  lockedUntil   DateTime?
+
+  children      Child[]
+  subscription  Subscription?
+  payments      Payment[]
+  notifications Notification[]
+  chatMessages  ChatMessage[]
+  media         Media[]
+  budgets       BudgetEntry[]
+  guideReads    GuideRead[]
+  shopInterests ProductInterest[]
+  consents      Consent[]
+  reports       ContentReport[]
+  auditLogs     AuditLog[]
+}
+
+model Child {
+  id            String   @id @default(cuid())
+  parentId      String
+  parent        User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  nickname      String // prénom ou pseudonyme (minimisation)
+  birthDate     DateTime
+  level         String   @default("debutant") // debutant | intermediaire | confirme
+  club          String?
+  clubTrainingsPerWeek Int @default(0)
+  clubDays      Int[]    @default([]) // 0 = dimanche ... 6 = samedi
+  matchDay      Int? // jour habituel de match
+  position      String?
+  dominantFoot  String   @default("droit")
+  goals         String[] @default([])
+  minutesAvailable Int   @default(20)
+  homeSessionsPerWeek Int @default(2)
+  equipment     String[] @default(["ballon"])
+  places        String[] @default(["jardin"])
+  experience    String   @default("aucune")
+  avatar        String   @default("⚽")
+  modes         Json     @default("{\"vacances\":false,\"petitEspace\":false,\"sansMateriel\":false}")
+  healthConsentAt DateTime? // consentement explicite (art. 9 RGPD) pour les données de forme et de santé ; vide = non collectées
+  createdAt     DateTime @default(now())
+
+  sessions      PlannedSession[]
+  events        CalendarEvent[]
+  measurements  Measurement[]
+  devEntries    DevelopmentEntry[]
+  badges        BadgeAward[]
+  reports       Report[]
+  media         Media[]
+  challenges    ChallengeProgress[]
+  milestones    Milestone[]
+}
+
+model Exercise {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  category      String // clé de catégorie (voir src/content/taxonomy.ts)
+  ageMin        Int
+  ageMax        Int
+  level         String // debutant | intermediaire | confirme
+  difficulty    Int // 1 à 5
+  objective     String
+  skill         String
+  why           String
+  durationMin   Int
+  reps          String
+  equipment     String[]
+  space         String // petit | moyen | grand
+  indoorOk      Boolean  @default(false)
+  parentRole    String   @default("observe") // observe | joue | aucun
+  intensity     Int      @default(2) // 1 calme, 2 modéré, 3 dynamique
+  bodyAreas     String[] @default([]) // zones sollicitées, pour la règle « douleur »
+  safety        String
+  steps         String[]
+  mistakes      String[]
+  corrections   String[]
+  variantEasy   String
+  variantMedium String
+  variantHard   String
+  successCriteria String
+  recoverySec   Int      @default(30)
+  diagram       Json // scène d'animation (schéma animé généré)
+  metricKey     String? // indicateur du carnet de progression associé
+  familySlug    String? // exercice de base dont cette fiche est une déclinaison (lui-même pour une fiche de base)
+  variantLabel  String? // libellé de la déclinaison ; vide pour une fiche de base
+  isFree        Boolean  @default(false) // inclus dans l'offre Découverte
+  published     Boolean  @default(true)
+  validatedBy   String? // traçabilité de la validation pédagogique
+  videoUrl      String? // vidéo ajoutée depuis l'administration (facultatif)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([familySlug])
+  @@index([category, ageMin, ageMax])
+}
+
+model PlannedSession {
+  id          String        @id @default(cuid())
+  childId     String
+  child       Child         @relation(fields: [childId], references: [id], onDelete: Cascade)
+  date        DateTime      @db.Date
+  status      SessionStatus @default(PLANNED)
+  format      String // decouverte | technique | coordination | plaisir | parent-enfant | courte | perfectionnement | douce
+  title       String
+  objective   String
+  durationMin Int
+  blocks      Json // [{phase, title, minutes, exerciseSlug?, text?, restSec?}]
+  parentTips  String[]
+  equipment   String[]
+  explanation String[] // pourquoi le moteur a construit la séance ainsi
+  rulesApplied String[] @default([])
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+  feedback    SessionFeedback?
+
+  @@index([childId, date])
+}
+
+model SessionFeedback {
+  id          String   @id @default(cuid())
+  sessionId   String   @unique
+  session     PlannedSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  enjoyment   Int // 1 pas vraiment, 2 moyennement, 3 beaucoup
+  energy      Int? // 1 très fatigué, 2 un peu fatigué, 3 en pleine forme ; vide sans consentement santé
+  motivation  Int // 1 peu motivé, 2 normal, 3 très motivé
+  difficulty  String   @default("ok") // facile | ok | difficile
+  pain        Boolean  @default(false)
+  painArea    String?
+  wantedMore  Boolean  @default(false)
+  confidence  Int      @default(2) // 1 en manque, 2 normal, 3 confiant
+  dislikedSlug String?
+  likedSlug   String?
+  note        String?
+  createdAt   DateTime @default(now())
+}
+
+model CalendarEvent {
+  id        String    @id @default(cuid())
+  childId   String
+  child     Child     @relation(fields: [childId], references: [id], onDelete: Cascade)
+  type      EventType
+  date      DateTime  @db.Date
+  endDate   DateTime? @db.Date
+  label     String?
+
+  @@index([childId, date])
+}
+
+model Measurement {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  metric    String // voir METRICS
+  value     Float
+  source    String   @default("parent") // parent | evaluation
+  note      String?
+  date      DateTime @default(now())
+
+  @@index([childId, metric, date])
+}
+
+// Carnet de développement : facultatif, privé, chiffré au repos.
+model DevelopmentEntry {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  payload   String // JSON chiffré AES-256-GCM {heightCm, weightKg, sleepH, fatigue, energy, motivation, wellbeing, note}
+
+  @@index([childId, date])
+}
+
+model BadgeAward {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  badgeKey  String
+  awardedAt DateTime @default(now())
+
+  @@unique([childId, badgeKey])
+}
+
+model ChallengeProgress {
+  id          String   @id @default(cuid())
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  challengeKey String
+  periodKey   String // ex. 2026-W46, 2026-11, 2026-11-10
+  stars       Int      @default(0) // 1 j'ai essayé, 2 j'ai progressé, 3 objectif atteint
+  value       Float?
+  createdAt   DateTime @default(now())
+
+  @@unique([childId, challengeKey, periodKey])
+}
+
+model Milestone {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  title     String
+  detail    String?
+  kind      String   @default("souvenir") // souvenir | etape | reussite
+  date      DateTime @default(now())
+  mediaId   String?
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  kind      String // mensuel | saison
+  periodKey String
+  facts     Json // faits mesurés uniquement
+  narrative String
+  generatedBy String @default("regles") // regles | ia
+  createdAt DateTime @default(now())
+
+  @@unique([childId, kind, periodKey])
+}
+
+model Media {
+  id          String      @id @default(cuid())
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  childId     String?
+  child       Child?      @relation(fields: [childId], references: [id], onDelete: SetNull)
+  kind        String // video | photo
+  title       String
+  storageKey  String
+  mimeType    String
+  sizeBytes   Int
+  status      MediaStatus @default(PRIVATE)
+  shareConsentAt DateTime? // consentement explicite au partage communautaire
+  minorIdentifiable Boolean @default(true)
+  exerciseSlug String?
+  moderationNote String?
+  createdAt   DateTime    @default(now())
+}
+
+model Guide {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  theme     String // accompagner | emotions | club | argent | confiance | progres
+  kind      String   @default("article") // article | fiche | conseil
+  summary   String
+  body      String // markdown léger
+  actions   String[] // « à appliquer dès ce soir »
+  readMin   Int      @default(3)
+  isFree    Boolean  @default(false)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  reads     GuideRead[]
+}
+
+model GuideRead {
+  userId  String
+  guideId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guide   Guide  @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  readAt  DateTime @default(now())
+
+  @@id([userId, guideId])
+}
+
+model Plan {
+  tier          PlanTier @id
+  name          String
+  tagline       String
+  monthlyCents  Int
+  yearlyCents   Int
+  trialDays     Int      @default(7)
+  maxChildren   Int      @default(1)
+  features      String[]
+  active        Boolean  @default(true)
+  sort          Int      @default(0)
+}
+
+model Subscription {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier          PlanTier  @default(DECOUVERTE)
+  status        SubStatus @default(ACTIVE)
+  interval      String    @default("month") // month | year
+  trialEndsAt   DateTime?
+  currentPeriodEnd DateTime?
+  cancelAtPeriodEnd Boolean @default(false)
+  provider      String    @default("none") // none | demo | stripe
+  stripeCustomerId String?
+  stripeSubscriptionId String?
+  updatedAt     DateTime  @updatedAt
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  userId      String? // vidé à la suppression du compte : la pièce comptable est conservée 10 ans, anonymisée
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  amountCents Int
+  currency    String   @default("eur")
+  status      String // paid | failed | refunded
+  description String
+  invoiceNumber String @unique
+  provider    String   @default("demo")
+  providerRef String?
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String // session | report | challenge | goal | rest | guide
+  title     String
+  body      String
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  childId   String?
+  role      String // user | assistant
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model BudgetEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  season    String
+  amounts   Json // {stages, coaching, materiel, deplacements, academies, equipements, licence}
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, season])
+}
+
+// Règles d'adaptation du moteur, modifiables depuis l'administration.
+model AiRule {
+  key         String  @id
+  label       String
+  description String
+  enabled     Boolean @default(true)
+  params      Json
+  locked      Boolean @default(false) // règle de sécurité non désactivable
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+}
+
+model UsageEvent {
+  id        String   @id @default(cuid())
+  name      String // événement agrégé, sans identifiant d'enfant
+  day       DateTime @db.Date
+  count     Int      @default(1)
+
+  @@unique([name, day])
+}
+
+// Boutique : kits et matériel vendus par Petit Pont. Prix et lien de commande saisis dans l'administration.
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  tagline     String
+  contents    String[] // une ligne par article du kit
+  equipment   String[] // clés de matériel couvertes (voir KIT dans taxonomy.ts)
+  ageMin      Int      @default(4)
+  ageMax      Int      @default(18)
+  priceCents  Int? // vide = prix pas encore annoncé
+  buyUrl      String? // lien vers la page de commande (boutique en ligne)
+  isBundle    Boolean  @default(false)
+  active      Boolean  @default(true)
+  sort        Int      @default(0)
+  interests   ProductInterest[]
+}
+
+model ProductInterest {
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, productId])
+}
+
+// Journal des consentements : chaque accord ou retrait, avec la version du document accepté.
+model Consent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // cgu | parental | health | marketing_email | media_share | withdrawal_waiver
+  version   String
+  granted   Boolean
+  childId   String?
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, type])
+}
+
+// Demandes de suppression reçues sans connexion (compte perdu, ou demande d'un tiers concerné).
+model DeletionRequest {
+  id         String    @id @default(cuid())
+  email      String
+  message    String?
+  status     String    @default("recue") // recue | traitee | rejetee
+  createdAt  DateTime  @default(now())
+  handledAt  DateTime?
+}
+
+// Signalements de contenus publiés (règlement européen sur les services numériques, art. 16).
+model ContentReport {
+  id        String   @id @default(cuid())
+  mediaId   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  reason    String
+  detail    String?
+  status    String   @default("ouvert") // ouvert | traite
+  createdAt DateTime @default(now())
+}
+
+// E-mails transactionnels. Sans serveur d'envoi configuré, ils sont conservés ici et non envoyés.
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  body      String
+  kind      String
+  sent      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

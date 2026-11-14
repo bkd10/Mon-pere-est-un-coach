@@ -1,0 +1,402 @@
+[
+  {
+    "name": "page d'accueil publique",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "espace parent protégé (redirection vers connexion)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "consentement parental obligatoire",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "inscription : e-mails de conseils non cochés par défaut",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "inscription → profil enfant",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "minimisation : seuls le mois et l'année de naissance sont demandés",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "santé : consentement facultatif, non coché par défaut",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "santé : avant 15 ans, l'accord de l'enfant est exigé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "tableau de bord personnalisé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "une séance est planifiée",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "calendrier : plafond de charge expliqué",
+    "pass": true,
+    "detail": "3 demandées, 2 clubs + 1 match"
+  },
+  {
+    "name": "séances planifiées dans le mois (≤ 2 sur 7 jours)",
+    "pass": true,
+    "detail": "2"
+  },
+  {
+    "name": "fiche séance : objectif, déroulé, consignes, explication",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "étape exercice : schéma animé + étapes + variante",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "lecteur pas à pas avec temps de repos",
+    "pass": true,
+    "detail": "8 écrans, pause vue : true"
+  },
+  {
+    "name": "bilan de séance : badge « Premier entraînement »",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "douleur : avis médical conseillé, exercices suspendus",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "« il voulait continuer » n'allonge pas la séance",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "accueil : état de récupération affiché",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "défi du jour validé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "bibliothèque filtrée sur l'âge de l'enfant",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "bibliothèque complète",
+    "pass": true,
+    "detail": "126 exercices de base affichés"
+  },
+  {
+    "name": "fiche exercice complète",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "carnet de progression : courbe et tendance",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "mini-évaluation : 3 étoiles quand l'objectif d'âge est atteint",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "carnet de développement enregistré (graphique affiché)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "déplacement un jour de match : refusé, replacé et expliqué",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "coach : réponse avec exercices de la bibliothèque et limites rappelées",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "académie des parents",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "guide lu et suivi",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "calculateur de budget : synthèse et pistes d'économie",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "souvenir avec photo ajouté",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "profil joueur, repères d'âge, badges, passeport",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "bilan mensuel : faits mesurés uniquement",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "boutique : kit recommandé selon l'âge",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "boutique : demande d'information enregistrée",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "mode sans matériel appliqué",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "abonnement : essai Premium, 4 offres, mode démonstration signalé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "abonnement : mensuel présélectionné, aucun badge de popularité",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "récapitulatif avant paiement : prix TTC, renouvellement, rétractation, bouton d'obligation de paiement",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "commande bloquée sans les deux cases",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "souscription Essentiel + facture",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "facture avec mentions du vendeur et TVA",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "rétractation : arrêt immédiat et remboursement au prorata",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "résiliation avec accès conservé jusqu'à l'échéance",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "confirmation de résiliation avec date d'effet",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "export des données",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "séance d'une autre famille inaccessible",
+    "pass": true,
+    "detail": "404"
+  },
+  {
+    "name": "photo d'une autre famille inaccessible",
+    "pass": true,
+    "detail": "404"
+  },
+  {
+    "name": "administration interdite aux parents",
+    "pass": true,
+    "detail": "http://localhost:3100/app/onboarding"
+  },
+  {
+    "name": "photo inaccessible sans connexion",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "mauvais mot de passe refusé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "tableau de bord administrateur",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/utilisateurs",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/exercices",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/guides",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/regles",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/offres",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/moderation",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin /admin/notifications",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "création d'un exercice (non publié par défaut)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "suppression d'un exercice",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "accessibilité WCAG A/AA (axe-core) sur l'espace parent",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "compte supprimé : connexion impossible",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "fichiers supprimés avec le compte",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /mentions-legales",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /confidentialite",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /cgu",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /remboursements",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /cookies",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /accessibilite",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page légale /supprimer-mes-donnees",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "demande de suppression sans connexion",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "désinscription : lien falsifié refusé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "aucune requête vers un service tiers (polices, scripts, traceurs)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "aucun cookie déposé avant connexion",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "clavier : lien « Aller au contenu » en premier",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "admin : page de conformité des 20 points",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "accessibilité WCAG A/AA (axe-core) sur les pages publiques",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "aucune erreur serveur ou JavaScript",
+    "pass": true,
+    "detail": ""
+  }
+]
