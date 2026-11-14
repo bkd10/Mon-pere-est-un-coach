@@ -40,7 +40,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
           <div className="grid grid-cols-2 gap-2">{["courte", "technique", "coordination", "plaisir", "parent-enfant", "perfectionnement"].map((k) => (
             <form key={k} action={quickSession}><input type="hidden" name="format" value={k} /><Submit className="card h-full w-full text-left" pendingText="Préparation…"><span className="block font-bold">{FORMATS[k].label}</span><span className="muted block">{FORMATS[k].desc}</span></Submit></form>
           ))}</div>
-        ) : <Upsell title="Séances à la demande" text="Avec l'offre Essentiel, lancez une séance quand vous voulez et choisissez son format. Les règles de récupération restent appliquées." />}
+        ) : <Upsell title="Séances à la demande" text="Avec l'abonnement Famille, lancez une séance quand vous voulez et choisissez son format. Les règles de récupération restent appliquées." />}
         <p className="muted mt-2 px-1">Le moteur vérifie toujours la récupération : il peut refuser une séance au lendemain d'un match ou d'une autre séance.</p>
       </Section>
       <Section title="Séances réalisées">

@@ -5,13 +5,15 @@ import { euro } from "@/lib/plans";
 import { AGE_BANDS, APP_NAME, CATEGORIES } from "@/content/taxonomy";
 import ExerciseAnimation from "@/components/ExerciseAnimation";
 import LegalFooter from "@/components/LegalFooter";
+import { giftPriceCents } from "@/lib/billing";
+import { LEGAL } from "@/content/legal";
 
 export const dynamic = "force-dynamic";
 
 export default async function Landing({ searchParams }: { searchParams: Promise<{ supprime?: string }> }) {
   const [user, plans, exCount, guideCount, sp] = await Promise.all([getUser(), db.plan.findMany({ where: { active: true }, orderBy: { sort: "asc" } }), db.exercise.count({ where: { published: true } }), db.guide.count({ where: { published: true } }), searchParams]);
   const cta = user ? "/app" : "/inscription";
-  const trial = plans.find((p) => p.tier === "PREMIUM")?.trialDays ?? 0;
+  const trial = plans.find((p) => p.tier === "FAMILLE")?.trialDays ?? 0;
   return (
     <main id="contenu" className="bg-white">
       {sp.supprime && <div className="bg-pitch-50 p-3 text-center text-sm font-semibold text-pitch-800">Votre compte et toutes vos données ont été supprimés. Merci d'avoir joué avec nous.</div>}
@@ -28,7 +30,8 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
           <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">Pas besoin d'être entraîneur pour aider votre enfant à progresser.</h1>
           <p className="mt-4 text-lg text-ink-700">Indiquez son âge et son niveau : {APP_NAME} vous dit quoi faire, pourquoi, comment — et quand le laisser se reposer. Dix à vingt minutes, un ballon, vous deux.</p>
           <div className="mt-6 flex flex-wrap gap-3"><Link href={cta} className="btn-primary text-base">Commencer gratuitement</Link><a href="#offres" className="btn-ghost text-base">Voir les offres</a></div>
-          <p className="muted mt-3">{trial > 0 ? `${trial} jours d'essai Premium, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
+          <p className="muted mt-3">{trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
+          {LEGAL.founderLine && <p className="mt-3 text-sm font-bold text-pitch-800">⚽ {LEGAL.founderLine}</p>}
         </div>
         <div className="mx-auto w-full max-w-sm rounded-[2rem] bg-ink-900 p-3 shadow-card">
           <div className="rounded-[1.5rem] bg-ink-50 p-3">
@@ -69,9 +72,9 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
         <div className="mx-auto max-w-5xl px-5">
           <h2 className="font-display text-3xl font-extrabold">Des offres simples, sans engagement</h2>
           <p className="mt-1 text-white/90">Sans engagement. Résiliation en deux clics depuis l'application.</p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {plans.map((p) => (
-              <div key={p.tier} className={`rounded-xl2 p-5 ${p.tier === "PREMIUM" ? "bg-sun-400 text-ink-900" : "bg-white/10"}`}>
+              <div key={p.tier} className={`rounded-xl2 p-5 ${p.tier === "FAMILLE" ? "bg-sun-400 text-ink-900" : "bg-white/10"}`}>
                 <div className="font-display text-xl font-extrabold">{p.name}</div>
                 <div className="mt-1 font-display text-3xl font-extrabold">{p.monthlyCents === 0 ? "Gratuit" : <>{euro(p.monthlyCents)}<span className="text-base font-bold opacity-70"> / mois</span></>}</div>
                 {p.yearlyCents > 0 && <div className="text-sm font-semibold opacity-80">ou {euro(p.yearlyCents)} / an (−{Math.round((1 - p.yearlyCents / (p.monthlyCents * 12)) * 100)} %)</div>}
@@ -79,13 +82,14 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
                 <ul className="mt-3 space-y-1.5 text-sm">{p.features.map((f) => <li key={f} className="flex gap-2"><span>✓</span><span>{f}</span></li>)}</ul>
               </div>
             ))}
+            <div className="rounded-xl2 bg-white/10 p-5"><div className="font-display text-xl font-extrabold">🎁 Carte cadeau</div><div className="mt-1 font-display text-3xl font-extrabold">{euro(giftPriceCents())}</div><div className="text-sm font-semibold opacity-90">paiement unique, 12 mois</div><p className="mt-2 text-sm opacity-90">Une saison de foot en famille à offrir. Aucun renouvellement.</p><Link href="/cadeau" className="btn-sun btn-sm mt-4">Offrir une saison</Link></div>
           </div>
           <div className="mt-8 text-center"><Link href={cta} className="btn-sun text-base">Créer mon compte</Link></div>
         </div>
       </section>
 
       <footer className="mx-auto max-w-5xl px-5 py-8 text-sm text-ink-500">
-        <p>{APP_NAME} accompagne les familles ; il ne remplace ni un club, ni un éducateur diplômé, ni un professionnel de santé. {guideCount} fiches pour les parents incluses.</p>
+        <p>{APP_NAME} accompagne les familles ; il ne remplace ni un club, ni un éducateur diplômé, ni un professionnel de santé. <Link href="/guides" className="font-bold text-pitch-700 underline">{guideCount} guides pour les parents</Link> · <Link href="/cadeau" className="font-bold text-pitch-700 underline">Carte cadeau</Link></p>
         <LegalFooter className="mt-4" />
       </footer>
     </main>

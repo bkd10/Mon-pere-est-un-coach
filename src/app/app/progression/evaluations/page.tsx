@@ -31,7 +31,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ f
           <form action={saveEvaluation} className="mt-3 flex gap-2"><input type="hidden" name="key" value={e.key} /><input name="value" type="number" inputMode="decimal" step="any" min="0" required className="input" placeholder={`Résultat (${m.unit})`} aria-label={`Résultat : ${e.label}`} /><Submit className="btn-primary shrink-0">Valider</Submit></form>
         </li>
       ); })}</ul>
-      {!ent.progression && <div className="mt-4"><Upsell title={`${EVALUATIONS.length - 2} autres mini-évaluations`} text="Slalom, contrôles orientés, frappes, équilibre, dribbles : toutes les évaluations sont dans l'offre Essentiel." /></div>}
+      {!ent.progression && <div className="mt-4"><Upsell title={`${EVALUATIONS.length - 2} autres mini-évaluations`} text="Slalom, contrôles orientés, frappes, équilibre, dribbles : toutes les évaluations sont dans l'abonnement Famille." /></div>}
       <Section title="Défis du mois" className="mt-6"><ul className="space-y-2">{MONTHLY_CHALLENGES.map((c) => <li key={c.key} className="card"><div className="font-bold">📆 {c.label}</div><p className="text-sm text-ink-700">{c.text}</p></li>)}</ul><p className="muted mt-2 px-1">Les défis récompensent l'effort, la régularité et la créativité — jamais uniquement le résultat. Il n'existe aucun classement entre enfants.</p></Section>
     </div>
   );

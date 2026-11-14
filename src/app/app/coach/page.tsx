@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { FEATURES } from "@/lib/flags";
 import { getActiveChild } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { clearChat } from "@/app/actions";
@@ -8,6 +10,7 @@ import { PageHead } from "@/components/ui";
 
 export const metadata = { title: "Coach IA" };
 export default async function Page() {
+  if (!FEATURES.coach) redirect("/app");
   const { user, child } = await getActiveChild();
   const ent = entOf(user);
   const [history, exs, used] = await Promise.all([

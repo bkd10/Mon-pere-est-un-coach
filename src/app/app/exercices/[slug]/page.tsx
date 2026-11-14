@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!ent.fullLibrary && !e.isFree) return (
     <div><PageHead title={e.name} sub={`${c.label} · ${e.ageMin}-${e.ageMax} ans`} back="/app/exercices" />
       <ExerciseAnimation diagram={diagram} title={e.name} /><div className="card my-4"><div className="text-sm font-bold text-pitch-700">Objectif</div><p>{e.objective}</p></div>
-      <Upsell title="Fiche complète dans l'offre Essentiel" text="Étapes détaillées, erreurs fréquentes, corrections, variantes et critère de réussite pour toute la bibliothèque." /></div>
+      <Upsell title="Fiche complète dans l'abonnement Famille" text="Étapes détaillées, erreurs fréquentes, corrections, variantes et critère de réussite pour toute la bibliothèque." /></div>
   );
   const family = await db.exercise.findMany({ where: { published: true, familySlug: e.familySlug ?? e.slug, NOT: { id: e.id } }, orderBy: [{ variantLabel: "asc" }], select: { slug: true, name: true, variantLabel: true, ageMin: true, ageMax: true, difficulty: true } });
   const communityVideos = await db.media.findMany({ where: { exerciseSlug: e.slug, status: "APPROVED", kind: "video" }, take: 3 });

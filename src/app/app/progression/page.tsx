@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import Link from "next/link";
 import { getActiveChild } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -24,12 +25,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ m
     <div>
       <PageHead title="Carnet de progression" sub={`Les progrès de ${child.nickname}, comparés uniquement à lui-même.`} />
       {sp.ok && <Notice tone="ok">Mesure enregistrée.</Notice>}{sp.e && <Notice tone="warn">{sp.e}</Notice>}
-      <div className="mb-4 grid grid-cols-3 gap-2">
+      <div className={`mb-4 grid gap-2 ${FEATURES.health ? "grid-cols-3" : "grid-cols-2"}`}>
         <Link href="/app/progression/evaluations" className="card p-3 text-center text-sm font-bold"><div className="text-2xl">🎯</div>Mini-évaluations</Link>
         <Link href="/app/bilans" className="card p-3 text-center text-sm font-bold"><div className="text-2xl">📝</div>Bilans</Link>
-        <Link href="/app/progression/carnet" className="card p-3 text-center text-sm font-bold"><div className="text-2xl">📓</div>Carnet de suivi</Link>
+        {FEATURES.health && <Link href="/app/progression/carnet" className="card p-3 text-center text-sm font-bold"><div className="text-2xl">📓</div>Carnet de suivi</Link>}
       </div>
-      {!ent.progression ? <Upsell title="Le carnet de progression" text="Suivez jongles, passes, frappes, équilibre et confiance dans le temps, avec des graphiques. Inclus dans l'offre Essentiel." /> : (
+      {!ent.progression ? <Upsell title="Le carnet de progression" text="Suivez jongles, passes, frappes, équilibre et confiance dans le temps, avec des graphiques. Inclus dans l'abonnement Famille." /> : (
         <>
           <Beginner show={user.beginnerMode}>Choisissez un indicateur, faites le petit test décrit, notez le résultat. Refaites-le dans quelques semaines : la courbe montre le chemin parcouru. Une mesure moins bonne n'a aucune importance.</Beginner>
           <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1">{METRICS.map((m) => <Link key={m.key} href={`/app/progression?m=${m.key}`} scroll={false} className={`chip shrink-0 ${sel.key === m.key ? "chip-on" : ""}`}>{m.label}</Link>)}</div>

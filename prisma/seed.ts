@@ -12,7 +12,7 @@ import { DEFAULT_RULES } from "../src/lib/engine";
 const db = new PrismaClient();
 
 async function main() {
-  for (const p of DEFAULT_PLANS) await db.plan.upsert({ where: { tier: p.tier }, update: { features: p.features, sort: p.sort, maxChildren: p.maxChildren }, create: p });
+  for (const p of DEFAULT_PLANS) await db.plan.upsert({ where: { tier: p.tier }, update: { features: p.features, sort: p.sort, maxChildren: p.maxChildren, name: p.name, tagline: p.tagline }, create: p });
   for (const r of DEFAULT_RULES) await db.aiRule.upsert({ where: { key: r.key }, update: { label: r.label, description: r.description, locked: r.locked }, create: { key: r.key, label: r.label, description: r.description, locked: r.locked, params: r.params } });
   // Boutique : les prix et liens saisis dans l'administration ne sont jamais écrasés.
   for (const p of DEFAULT_PRODUCTS) await db.product.upsert({ where: { slug: p.slug }, update: { contents: p.contents, equipment: p.equipment }, create: p });

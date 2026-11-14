@@ -185,7 +185,7 @@
     "detail": ""
   },
   {
-    "name": "abonnement : essai Premium, 4 offres, mode démonstration signalé",
+    "name": "abonnement : essai gratuit, offre unique, mode démonstration signalé",
     "pass": true,
     "detail": ""
   },
@@ -205,7 +205,7 @@
     "detail": ""
   },
   {
-    "name": "souscription Essentiel + facture",
+    "name": "souscription Famille + facture",
     "pass": true,
     "detail": ""
   },
@@ -321,6 +321,46 @@
   },
   {
     "name": "fichiers supprimés avec le compte",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "guides publics (référencement)",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "guide public lisible sans compte",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "plan du site",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "mot de passe oublié : même réponse que le compte existe ou non",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "réinitialisation : jeton invalide refusé",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "carte cadeau : achat et code délivré",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "carte cadeau : code activé, 12 mois sans renouvellement",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "carte cadeau : un code ne sert qu'une fois",
     "pass": true,
     "detail": ""
   },

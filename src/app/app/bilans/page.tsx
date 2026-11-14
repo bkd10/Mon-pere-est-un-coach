@@ -26,7 +26,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
       {sp.e && <Notice tone="warn">{sp.e}</Notice>}
       <Section title="Générer un bilan"><div className="card space-y-3 print:hidden">
         <form action={generateReport} className="flex gap-2"><input type="hidden" name="kind" value="mensuel" /><select name="period" className="input capitalize" aria-label="Mois" defaultValue={sp.mois ?? months[0]}>{months.map((m) => <option key={m} value={m}>{mLabel(m)}</option>)}</select><Submit className="btn-primary shrink-0" pendingText="Rédaction…">Bilan du mois</Submit></form>
-        {ent.aiReports ? <form action={generateReport}><input type="hidden" name="kind" value="saison" /><Submit className="btn-ghost w-full" pendingText="Rédaction…">📘 Bilan de fin de saison</Submit></form> : <p className="muted">Le bilan de fin de saison et la rédaction personnalisée par le coach IA font partie de l'offre Premium.</p>}
+        {ent.aiReports ? <form action={generateReport}><input type="hidden" name="kind" value="saison" /><Submit className="btn-ghost w-full" pendingText="Rédaction…">📘 Bilan de fin de saison</Submit></form> : <p className="muted">Le bilan de fin de saison et la rédaction personnalisée par le coach IA font partie de l'abonnement Famille.</p>}
       </div></Section>
       {current && f ? (
         <article className="card mb-5">
@@ -38,7 +38,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
           <p className="muted mt-4">{current.generatedBy === "ia" ? "Rédigé par le coach IA à partir des seules données enregistrées." : "Rédigé automatiquement à partir des seules données enregistrées."} Généré le {new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(current.createdAt)}. Ce bilan n'est ni une évaluation de potentiel ni un avis médical.</p>
         </article>
       ) : <div className="card muted mb-5">Aucun bilan pour l'instant. Générez le premier ci-dessus : il résume les séances, les mesures et le ressenti du mois.</div>}
-      {!ent.aiReports && <div className="mb-5"><Upsell title="Des bilans rédigés sur mesure" text="Avec Premium, le coach IA rédige chaque bilan dans un langage naturel, toujours à partir des faits mesurés, et prépare le bilan de fin de saison." /></div>}
+      {!ent.aiReports && <div className="mb-5"><Upsell title="Des bilans rédigés sur mesure" text="Avec l'abonnement Famille, chaque bilan est rédigé dans un langage naturel, toujours à partir des faits mesurés, et prépare le bilan de fin de saison." /></div>}
       {reports.length > 1 && <Section title="Historique"><ul className="space-y-2 print:hidden">{reports.map((r) => <li key={r.id}><Link href={`/app/bilans?p=${r.kind}:${r.periodKey}`} className="card flex justify-between py-3 text-sm font-bold"><span className="capitalize">{r.kind === "saison" ? `Saison ${r.periodKey}` : mLabel(r.periodKey)}</span><span aria-hidden>›</span></Link></li>)}</ul></Section>}
     </div>
   );

@@ -4,6 +4,7 @@ const env = (k: string) => (process.env[k] ?? "").trim();
 
 export const LEGAL = {
   brand: env("NEXT_PUBLIC_APP_NAME") || "Petit Pont",
+  founderLine: env("FOUNDER_LINE"), // mention affichée sur la page d'accueil ; doit rester exacte et vérifiable
   company: env("LEGAL_COMPANY"), // raison sociale (ou nom et prénom pour un entrepreneur individuel)
   form: env("LEGAL_FORM"), // SAS, SARL, EI…
   capital: env("LEGAL_CAPITAL"), // ex. « 1 000 € » (sociétés)

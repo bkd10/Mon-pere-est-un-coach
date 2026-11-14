@@ -13,7 +13,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
   const { user, child } = await getActiveChild();
   const sp = await searchParams;
   const ent = entOf(user);
-  if (!ent.calendar) return <div><PageHead title="Calendrier intelligent" /><Upsell title="Le calendrier intelligent" text="Séances, jours de repos, matchs et vacances sur une même vue. Déplacez une séance : le programme se réorganise en respectant la récupération. Inclus dans l'offre Essentiel." /></div>;
+  if (!ent.calendar) return <div><PageHead title="Calendrier intelligent" /><Upsell title="Le calendrier intelligent" text="Séances, jours de repos, matchs et vacances sur une même vue. Déplacez une séance : le programme se réorganise en respectant la récupération. Inclus dans l'abonnement Famille." /></div>;
   await ensurePlan(child, ent);
   const today = todayIso();
   const month = /^\d{4}-\d{2}$/.test(sp.mois ?? "") ? sp.mois! : today.slice(0, 7);

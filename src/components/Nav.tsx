@@ -8,12 +8,12 @@ const ITEMS = [
   { href: "/app/progression", label: "Progrès", icon: "📈", match: (p: string) => p.startsWith("/app/progression") || p.startsWith("/app/bilans") },
   { href: "/app/menu", label: "Plus", icon: "☰", match: (p: string) => ["/app/menu", "/app/enfant", "/app/calendrier", "/app/guide", "/app/abonnement", "/app/parametres", "/app/notifications"].some((x) => p.startsWith(x)) },
 ];
-export default function Nav() {
+export default function Nav({ coach = false }: { coach?: boolean }) {
   const p = usePathname();
   if (p.startsWith("/app/onboarding")) return null;
   return (
     <>
-      {!p.startsWith("/app/coach") && !/^\/app\/seance\/[^/]+$/.test(p) && <Link href="/app/coach" aria-label="Demander au coach IA" className="fixed bottom-24 right-4 z-30 flex items-center gap-2 rounded-full bg-ink-900 px-4 py-3 text-sm font-bold text-white shadow-card"><span aria-hidden>💬</span> Coach</Link>}
+      {coach && !p.startsWith("/app/coach") && !/^\/app\/seance\/[^/]+$/.test(p) && <Link href="/app/coach" aria-label="Demander au coach IA" className="fixed bottom-24 right-4 z-30 flex items-center gap-2 rounded-full bg-ink-900 px-4 py-3 text-sm font-bold text-white shadow-card"><span aria-hidden>💬</span> Coach</Link>}
       <nav className="safe-b fixed inset-x-0 bottom-0 z-30 border-t border-ink-100 bg-white/95 backdrop-blur" aria-label="Navigation principale">
         <ul className="mx-auto flex max-w-xl">
           {ITEMS.map((i) => { const on = i.match(p); return (

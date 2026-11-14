@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import type { Child } from "@prisma/client";
 import { saveChild } from "@/app/actions";
 import { EQUIPMENT, GOALS, LEVELS, PLACES, POSITIONS } from "@/content/taxonomy";
@@ -37,12 +38,12 @@ export default function ChildForm({ child }: { child?: Child }) {
         <div><span className="label">Où pouvez-vous jouer ?</span><div className="grid grid-cols-2 gap-2">{PLACES.map((p) => <Choice key={p.key} type="checkbox" name="places" value={p.key} label={p.label} defaultChecked={c ? c.places.includes(p.key) : p.key === "jardin"} />)}</div></div>
         <div><span className="label">Matériel disponible</span><div className="grid grid-cols-1 gap-2">{EQUIPMENT.filter((e) => e.key !== "ballon").map((e) => <Choice key={e.key} type="checkbox" name="equipment" value={e.key} label={e.label} defaultChecked={c ? c.equipment.includes(e.key) : e.key === "plots"} />)}</div><p className="muted mt-1">Un ballon suffit pour commencer. Les plots se remplacent par des bouteilles.</p></div>
       </Group>
-      <fieldset className="card"><legend className="sr-only">Suivi forme et santé</legend>
+      {FEATURES.health && <fieldset className="card"><legend className="sr-only">Suivi forme et santé</legend>
         <div className="font-display text-lg font-extrabold">Suivi forme et santé <span className="text-sm font-bold text-ink-500">(facultatif)</span></div>
         <p className="muted mb-3">Avec votre accord, l'application enregistre la fatigue et les douleurs signalées après les séances pour alléger ou suspendre des exercices, et vous permet de tenir un carnet (taille, poids, sommeil). Ces données sont chiffrées, visibles par vous seul, jamais transmises à l'IA ni utilisées pour un diagnostic. Sans cet accord, les séances fonctionnent normalement mais ne s'adaptent pas à la fatigue. Vous pouvez retirer votre accord à tout moment : les données correspondantes sont alors effacées.</p>
         <label className="flex gap-3 text-sm"><input type="checkbox" name="health" defaultChecked={Boolean(c?.healthConsentAt)} className="mt-0.5 h-5 w-5 shrink-0 accent-pitch-600" /><span>J'accepte que les données de forme et de santé de mon enfant soient utilisées pour adapter ses séances.</span></label>
         <label className="mt-2 flex gap-3 text-sm"><input type="checkbox" name="healthChild" defaultChecked={Boolean(c?.healthConsentAt)} className="mt-0.5 h-5 w-5 shrink-0 accent-pitch-600" /><span>Si mon enfant a moins de 15 ans : je lui ai expliqué ce suivi et il est d'accord.</span></label>
-      </fieldset>
+      </fieldset>}
       <Submit pendingText="Création du programme…">{c ? "Enregistrer et recalculer le programme" : "Créer son programme"}</Submit>
     </form>
   );

@@ -139,17 +139,17 @@ try {
 
   // 12. Modes, paramètres, abonnement (démonstration)
   await page.goto(`${BASE}/app/parametres`); await page.check('input[name="sansMateriel"]'); await submit("Appliquer et recalculer le programme"); ok("mode sans matériel appliqué", await has(/Modifications enregistrées/));
-  await page.goto(`${BASE}/app/abonnement`); t = await text(); ok("abonnement : essai Premium, 4 offres, mode démonstration signalé", t.includes("Essai gratuit") && /3,99\s€/.test(t) && t.includes("Annuel") && t.includes("Mode démonstration") && ["Découverte", "Essentiel", "Premium", "Famille"].every((x) => t.includes(x))); await shot("17-abonnement");
+  await page.goto(`${BASE}/app/abonnement`); t = await text(); ok("abonnement : essai gratuit, offre unique, mode démonstration signalé", t.includes("Essai gratuit") && /4,99\s€/.test(t) && t.includes("Annuel") && t.includes("Mode démonstration") && ["Découverte", "Famille"].every((x) => t.includes(x)) && !t.includes("Premium") && !t.includes("Essentiel")); await shot("17-abonnement");
   ok("abonnement : mensuel présélectionné, aucun badge de popularité", !t.includes("Le plus choisi") && t.includes("TTC par mois"));
-  await page.locator('a[href*="tier=ESSENTIEL"]').click(); await page.waitForURL("**/confirmer**"); t = await text();
-  ok("récapitulatif avant paiement : prix TTC, renouvellement, rétractation, bouton d'obligation de paiement", /3,99\s€ TTC par mois/.test(t) && /renouvelé automatiquement/.test(t) && /14 jours/.test(t) && /Commander avec obligation de paiement/.test(t)); await shot("17b-recapitulatif");
+  await page.locator('a[href*="tier=FAMILLE"]').click(); await page.waitForURL("**/confirmer**"); t = await text();
+  ok("récapitulatif avant paiement : prix TTC, renouvellement, rétractation, bouton d'obligation de paiement", /4,99\s€ TTC par mois/.test(t) && /renouvelé automatiquement/.test(t) && /14 jours/.test(t) && /Commander avec obligation de paiement/.test(t)); await shot("17b-recapitulatif");
   await submit("Commander avec obligation de paiement"); await page.waitForTimeout(500); ok("commande bloquée sans les deux cases", page.url().includes("/confirmer") && (await page.locator("input[name=cgv]:invalid").count()) === 1);
   await page.check('input[name="cgv"]'); await page.check('input[name="immediate"]'); await submit("Commander avec obligation de paiement");
-  ok("souscription Essentiel + facture", await has(/Votre offre actuelle/) && await has(/F\d{4}-\d{6}/));
+  ok("souscription Famille + facture", await has(/Votre offre actuelle/) && await has(/F\d{4}-\d{6}/));
   await page.getByRole("link", { name: "Facture" }).first().click(); ok("facture avec mentions du vendeur et TVA", await has(/Vendeur/) && await has(/TVA/)); await page.goBack();
   page.once("dialog", (d) => d.accept()); await submit("Exercer mon droit de rétractation");
   ok("rétractation : arrêt immédiat et remboursement au prorata", await has(/Rétractation enregistrée/) && await has(/remboursé/));
-  await page.locator('a[href*="tier=ESSENTIEL"]').click(); await page.waitForURL("**/confirmer**"); await page.check('input[name="cgv"]'); await page.check('input[name="immediate"]'); await submit("Commander avec obligation de paiement"); await has(/Votre offre actuelle/);
+  await page.locator('a[href*="tier=FAMILLE"]').click(); await page.waitForURL("**/confirmer**"); await page.check('input[name="cgv"]'); await page.check('input[name="immediate"]'); await submit("Commander avec obligation de paiement"); await has(/Votre offre actuelle/);
   page.once("dialog", (d) => d.accept()); await submit("Résilier mon abonnement"); ok("résiliation avec accès conservé jusqu'à l'échéance", await has(/Résilié — accès jusqu'au/));
   await page.goto(`${BASE}/app/notifications`); ok("confirmation de résiliation avec date d'effet", await has(/Confirmation de résiliation/) && await has(/accès jusqu'au/));
 
@@ -198,6 +198,24 @@ try {
 } catch (e) {
   ok("exécution du parcours", false, String(e).slice(0, 400)); await shot("zz-erreur").catch(() => {});
 }
+// 16b. Carte cadeau, mot de passe oublié, guides publics.
+{
+  const c5 = await browser.newContext({ viewport: { width: 390, height: 844 } }); const g = await c5.newPage();
+  await g.goto(`${BASE}/guides`); ok("guides publics (référencement)", (await g.locator('a[href^="/guides/"]').count()) >= 5);
+  await g.locator('a[href^="/guides/"]').first().click(); ok("guide public lisible sans compte", await has(/À appliquer dès maintenant/, g));
+  const sm = await g.request.get(`${BASE}/sitemap.xml`); ok("plan du site", sm.ok() && (await sm.text()).includes("/guides/"));
+  await g.goto(`${BASE}/mot-de-passe-oublie`); await g.fill("#email", "personne@test.local"); await g.getByRole("button", { name: "Recevoir le lien" }).click(); ok("mot de passe oublié : même réponse que le compte existe ou non", await has(/Si un compte existe/, g));
+  await g.goto(`${BASE}/reinitialiser?t=faux`); await g.fill("#password", "nouveau-mot-de-passe"); await g.getByRole("button", { name: "Enregistrer" }).click(); ok("réinitialisation : jeton invalide refusé", await has(/n'est plus valable/, g));
+  await g.goto(`${BASE}/cadeau`); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.check('input[name="cgv"]'); await g.getByRole("button", { name: /Commander avec obligation de paiement/ }).click();
+  ok("carte cadeau : achat et code délivré", await has(/PP-[0-9A-F]{5}-[0-9A-F]{5}/, g)); await g.screenshot({ path: `${SHOTS}/21-cadeau.png` });
+  const code = (await g.locator("body").innerText()).match(/PP-[0-9A-F]{5}-[0-9A-F]{5}/)?.[0];
+  await g.goto(`${BASE}/inscription`); await g.fill("#firstName", "Cadeau"); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.fill("#password", "motdepasse-test-3"); await g.check('input[name="cgu"]'); await g.check('input[name="consent"]'); await g.getByRole("button", { name: "Créer mon compte" }).click(); await g.waitForURL("**/app/onboarding");
+  await g.goto(`${BASE}/app/abonnement`); await g.fill('input[name="code"]', code ?? ""); await g.getByRole("button", { name: "Activer" }).click();
+  ok("carte cadeau : code activé, 12 mois sans renouvellement", await has(/Code cadeau activé/, g) && await has(/Résilié — accès jusqu'au/, g));
+  await g.fill('input[name="code"]', code ?? ""); await g.getByRole("button", { name: "Activer" }).click(); ok("carte cadeau : un code ne sert qu'une fois", await has(/déjà été utilisé/, g));
+  await c5.close();
+}
+
 // 17. Conformité : pages légales, aucun tiers, accessibilité automatique, clavier.
 {
   const ctx4 = await browser.newContext({ viewport: { width: 390, height: 844 } }); const q = await ctx4.newPage();

@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 // Coach parental IA. Claude rédige et conseille ; il ne construit jamais de séance :
 // les exercices cités viennent des fiches de l'application, et les programmes du moteur de règles.
 import Anthropic from "@anthropic-ai/sdk";
@@ -95,7 +96,7 @@ export async function* coachStream(message: string, history: Turn[], child: Chil
 
 // Bilan rédigé par Claude, strictement à partir des faits mesurés.
 export async function narrateWithAI(facts: ReportFacts, kind: "mensuel" | "saison"): Promise<string | null> {
-  if (!aiAvailable()) return null;
+  if (!aiAvailable() || !FEATURES.coach) return null;
   try {
     const res = await anthropic().beta.messages.create({
       model: MODEL, max_tokens: 2000, betas: ["server-side-fallback-2026-07-01"], fallbacks: "default", output_config: { effort: "low" },

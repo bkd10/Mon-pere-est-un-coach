@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { getUser, track } from "@/lib/auth";
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 export async function POST(req: NextRequest) {
+  if (!FEATURES.coach) return new Response("Fonction désactivée", { status: 404 });
   const user = await getUser();
   if (!user) return new Response("Non connecté", { status: 401 });
   const body = await req.json().catch(() => null) as { message?: string } | null;

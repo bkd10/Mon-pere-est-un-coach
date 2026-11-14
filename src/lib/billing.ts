@@ -68,6 +68,11 @@ export async function portalUrl(userId: string): Promise<string | null> {
 // Traitement des évènements Stripe (signature vérifiée dans la route).
 export async function handleStripeEvent(event: Stripe.Event) {
   switch (event.type) {
+    case "checkout.session.completed": {
+      const cs = event.data.object as Stripe.Checkout.Session;
+      if (cs.metadata?.giftId && cs.payment_status === "paid") await markGiftPaid(cs.metadata.giftId, "stripe", typeof cs.payment_intent === "string" ? cs.payment_intent : cs.payment_intent?.id);
+      return;
+    }
     case "customer.subscription.created":
     case "customer.subscription.updated":
     case "customer.subscription.deleted": {
@@ -132,4 +137,44 @@ export async function withdrawSubscription(userId: string): Promise<number> {
   await db.payment.create({ data: { userId, amountCents: refund, status: "refunded", description: `Remboursement — rétractation (${used} jour${used > 1 ? "s" : ""} utilisé${used > 1 ? "s" : ""})`, invoiceNumber: await nextInvoiceNumber(), provider: w.sub.provider, providerRef } });
   await db.subscription.update({ where: { userId }, data: { tier: "DECOUVERTE", status: "ACTIVE", currentPeriodEnd: null, cancelAtPeriodEnd: false, trialEndsAt: null } });
   return refund;
+}
+
+// ───── Carte cadeau « Une saison » : 12 mois d'abonnement Famille, paiement unique, sans renouvellement ─────
+export const giftPriceCents = () => Number(process.env.GIFT_PRICE_CENTS ?? "2900");
+
+export async function markGiftPaid(giftId: string, provider: string, providerRef?: string) {
+  const g = await db.giftCode.findUnique({ where: { id: giftId } });
+  if (!g || g.paid) return g;
+  const paid = await db.giftCode.update({ where: { id: giftId }, data: { paid: true, provider, providerRef } });
+  await db.payment.create({ data: { amountCents: g.amountCents, status: "paid", description: `${APP_NAME} — carte cadeau Une saison${provider === "demo" ? " (démonstration, aucun débit)" : ""}`, invoiceNumber: await nextInvoiceNumber(), provider, providerRef } });
+  const { sendEmail } = await import("./mail");
+  await sendEmail({ to: g.purchaserEmail, subject: "Votre carte cadeau Petit Pont", kind: "cadeau", text: `Merci !\n\nVoici le code cadeau à offrir : ${g.code}\n\nIl donne ${g.months} mois d'abonnement Famille (jusqu'à 3 enfants), sans renouvellement automatique.\nPour l'utiliser : créer un compte sur ${base()}/inscription, puis « Mon abonnement » → « J'ai un code cadeau ».\n\nVous disposez de 14 jours pour vous rétracter tant que le code n'a pas été utilisé.` });
+  return paid;
+}
+
+export async function startGiftCheckout(giftId: string): Promise<{ url?: string }> {
+  const g = await db.giftCode.findUnique({ where: { id: giftId } });
+  if (!g) throw new Error("Carte introuvable.");
+  if (!stripeEnabled()) { await markGiftPaid(giftId, "demo"); return {}; }
+  const session = await stripe().checkout.sessions.create({
+    mode: "payment", locale: "fr", customer_email: g.purchaserEmail,
+    line_items: [{ quantity: 1, price_data: { currency: "eur", unit_amount: g.amountCents, product_data: { name: `${APP_NAME} — carte cadeau Une saison (${g.months} mois)` } } }],
+    metadata: { giftId }, success_url: `${base()}/cadeau/merci?g=${giftId}`, cancel_url: `${base()}/cadeau?annule=1`,
+  });
+  return { url: session.url ?? undefined };
+}
+
+export async function redeemGift(userId: string, rawCode: string): Promise<string | null> {
+  const code = rawCode.trim().toUpperCase();
+  const g = await db.giftCode.findUnique({ where: { code } });
+  if (!g || !g.paid) return "Ce code n'est pas reconnu. Vérifiez les tirets et les lettres.";
+  if (g.redeemedAt) return "Ce code a déjà été utilisé.";
+  const sub = await db.subscription.findUnique({ where: { userId } });
+  // Si un abonnement payant est en cours, les mois offerts s'ajoutent à la suite.
+  const from = sub && sub.tier !== "DECOUVERTE" && sub.status !== "TRIALING" && sub.currentPeriodEnd && sub.currentPeriodEnd > new Date() ? new Date(sub.currentPeriodEnd) : new Date();
+  if (sub?.provider === "stripe" && sub.status === "ACTIVE" && !sub.cancelAtPeriodEnd) return "Vous avez déjà un abonnement en cours avec renouvellement. Résiliez-le d'abord : les mois offerts s'ajouteront à la fin de la période payée.";
+  from.setMonth(from.getMonth() + g.months);
+  await db.subscription.upsert({ where: { userId }, update: { tier: "FAMILLE", status: "CANCELED", cancelAtPeriodEnd: true, currentPeriodEnd: from, trialEndsAt: null, provider: sub?.provider === "stripe" ? "stripe" : "gift" }, create: { userId, tier: "FAMILLE", status: "CANCELED", cancelAtPeriodEnd: true, currentPeriodEnd: from, provider: "gift" } });
+  await db.giftCode.update({ where: { id: g.id }, data: { redeemedById: userId, redeemedAt: new Date() } });
+  return null;
 }

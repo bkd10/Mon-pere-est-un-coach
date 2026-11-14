@@ -90,6 +90,13 @@ Déjà en place dans le code :
 
 À faire par vous avant d'ouvrir : renseigner les variables `LEGAL_*` de `.env`, adhérer à un médiateur de la consommation, choisir l'hébergeur (UE, éventuellement HDS), configurer `SMTP_URL` et Stripe, planifier `npm run daily` chaque nuit, signer les contrats de sous-traitance, réaliser l'analyse d'impact (AIPD), faire relire les fiches par un éducateur diplômé et tous les textes légaux par un avocat, vérifier la marque.
 
+## Configuration de lancement (v1)
+
+- Une seule offre payante, **Famille** (4,99 € par mois ou 34,90 € par an, jusqu'à 3 enfants), l'offre Découverte gratuite, et la **carte cadeau « Une saison »** (`/cadeau`, 29 €, paiement unique, 12 mois sans renouvellement).
+- Désactivés par défaut, réactivables par variable d'environnement : coach IA (`FEATURE_COACH`), suivi santé (`FEATURE_HEALTH`), vidéos partagées entre familles (`FEATURE_FAMILY_VIDEOS`).
+- Guides publics pour le référencement (`/guides`), plan du site, mot de passe oublié (nécessite `SMTP_URL`).
+- Tests : `npm run test:e2e` sur un serveur lancé avec `FEATURE_ALL=1` (88 vérifications), et `node tests/e2e/v1.mjs` sur un serveur sans interrupteur (configuration de lancement).
+
 ## Repères économiques (estimations)
 
 - Coût du coach IA avec `claude-opus-5-5` et prompt mis en cache : de l'ordre de 0,01 à 0,02 $ par question. Les quotas (3 à l'essai, 10 par mois en Essentiel) bornent le coût par abonné ; `COACH_MODEL` permet de choisir un modèle moins cher.

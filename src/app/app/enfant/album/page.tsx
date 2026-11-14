@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import { getActiveChild } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { addMemory, deleteMemory, shareMedia, unshareMedia } from "@/app/actions";
@@ -36,7 +37,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
             {md && (md.kind === "video" ? <video src={`/api/media/${md.id}`} controls playsInline preload="metadata" className="mb-3 w-full rounded-2xl bg-ink-900" /> : <img src={`/api/media/${md.id}`} alt={m.title} className="mb-3 w-full rounded-2xl" loading="lazy" />)}
             <div className="flex items-start justify-between gap-2"><div><div className="font-bold">{m.kind === "etape" ? "🚩" : m.kind === "reussite" ? "🌟" : "📸"} {m.title}</div><div className="muted">{new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(m.date)}</div>{m.detail && <p className="mt-1 text-sm text-ink-700">{m.detail}</p>}</div>
               <form action={deleteMemory}><input type="hidden" name="id" value={m.id} /><Submit className="text-sm font-bold text-coral-600" confirm="Supprimer ce souvenir ?" pendingText="…">Supprimer</Submit></form></div>
-            {md?.kind === "video" && (
+            {FEATURES.familyVideos && md?.kind === "video" && (
               <details className="mt-3 rounded-2xl bg-ink-50 p-3 text-sm"><summary className="cursor-pointer font-bold">Partage : {STATUS[md.status]}</summary>
                 {md.status === "PRIVATE" || md.status === "REJECTED" ? (
                   <form action={shareMedia} className="mt-3 space-y-2"><input type="hidden" name="mediaId" value={md.id} />

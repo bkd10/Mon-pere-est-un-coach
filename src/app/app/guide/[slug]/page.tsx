@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getActiveChild } from "@/lib/auth";
@@ -19,12 +20,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <article>
       <PageHead title={g.title} sub={`${t?.icon ?? ""} ${t?.label ?? ""} · ${g.readMin} min de lecture`} back="/app/guide" />
       <p className="mb-4 text-lg font-semibold text-ink-700">{g.summary}</p>
-      {locked ? <Upsell title="Fiche réservée aux abonnés" text="L'académie complète des parents est incluse dans l'offre Essentiel." /> : (
+      {locked ? <Upsell title="Fiche réservée aux abonnés" text="L'académie complète des parents est incluse dans l'abonnement Famille." /> : (
         <>
           <div className="card mb-4"><Rich text={g.body} /></div>
           <div className="card mb-4 bg-pitch-50"><div className="mb-2 font-display text-lg font-extrabold">À appliquer dès maintenant</div><ul className="space-y-2">{g.actions.map((a) => <li key={a} className="flex gap-2 text-[15px]"><span aria-hidden>✅</span>{a}</li>)}</ul></div>
           <form action={markGuideRead}><input type="hidden" name="guideId" value={g.id} /><Submit>J'ai lu cette fiche</Submit></form>
-          <Link href="/app/coach" className="mt-3 block text-center text-sm font-bold text-pitch-700">Une question sur ce sujet ? Demander au coach →</Link>
+          {FEATURES.coach && <Link href="/app/coach" className="mt-3 block text-center text-sm font-bold text-pitch-700">Une question sur ce sujet ? Demander au coach →</Link>}
         </>
       )}
     </article>

@@ -1,4 +1,5 @@
 "use server";
+import { FEATURES } from "@/lib/flags";
 // Actions serveur de l'espace parent. Chaque action vérifie la session et l'appartenance de l'enfant.
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -14,7 +15,7 @@ import { addDaysIso, awardBadges, buildFacts, dayDate, ensurePlan, entOf, getLib
 import { buildSession, validateMove } from "@/lib/engine";
 import { encryptJson } from "@/lib/crypto";
 import { narrateWithAI } from "@/lib/coach";
-import { cancelSubscription, resumeSubscription, startCheckout, withdrawSubscription, withdrawalWindow } from "@/lib/billing";
+import { cancelSubscription, redeemGift, resumeSubscription, startCheckout, withdrawSubscription, withdrawalWindow } from "@/lib/billing";
 import { sendEmail } from "@/lib/mail";
 import { DOC_VERSIONS } from "@/content/legal";
 import { ageFromBirth, BADGES, EVALUATIONS, METRICS, bandForAge, metricOf, monthKey, weekKey } from "@/content/taxonomy";
@@ -32,7 +33,7 @@ export async function signup(f: FormData) {
   if (f.get("consent") !== "on") fail("/inscription", "Merci de confirmer que vous êtes titulaire de l'autorité parentale.");
   const { firstName, email, password } = parsed.data!;
   if (await db.user.findUnique({ where: { email } })) fail("/inscription", "Un compte existe déjà avec cet e-mail. Connectez-vous.");
-  const premium = await db.plan.findUnique({ where: { tier: "PREMIUM" } });
+  const premium = await db.plan.findUnique({ where: { tier: "FAMILLE" } });
   const trialDays = premium?.trialDays ?? 7;
   const user = await db.user.create({ data: {
     firstName, email, passwordHash: await hashPassword(password), consentAt: new Date(), consentVersion: DOC_VERSIONS.privacy, emailMarketing: f.get("marketing") === "on",
@@ -41,7 +42,7 @@ export async function signup(f: FormData) {
       { type: "parental", version: DOC_VERSIONS.privacy, granted: true, detail: "Titulaire de l'autorité parentale, accepte le traitement des données de l'enfant (politique de confidentialité)" },
       { type: "marketing_email", version: DOC_VERSIONS.privacy, granted: f.get("marketing") === "on" },
     ] },
-    subscription: { create: trialDays > 0 ? { tier: "PREMIUM", status: "TRIALING", trialEndsAt: new Date(Date.now() + trialDays * 86400000) } : { tier: "DECOUVERTE", status: "ACTIVE" } },
+    subscription: { create: trialDays > 0 ? { tier: "FAMILLE", status: "TRIALING", trialEndsAt: new Date(Date.now() + trialDays * 86400000) } : { tier: "DECOUVERTE", status: "ACTIVE" } },
   } });
   await audit(user.id, "signup", `CGU ${DOC_VERSIONS.cgu}, confidentialité ${DOC_VERSIONS.privacy}`);
   await track("signup");
@@ -97,7 +98,7 @@ export async function saveChild(f: FormData) {
   if (age < 4 || age > 18) fail(back, "L'application s'adresse aux enfants et aux jeunes de 4 à 18 ans.");
   const ent = entOf(user);
   // Données de forme et de santé : consentement explicite et séparé (art. 9 RGPD) ; avant 15 ans, l'enfant doit aussi être d'accord.
-  const wantsHealth = f.get("health") === "on";
+  const wantsHealth = FEATURES.health && f.get("health") === "on";
   if (wantsHealth && age < 15 && f.get("healthChild") !== "on") fail(back, "Avant 15 ans, confirmez aussi que votre enfant a été informé et est d'accord, ou décochez le suivi forme et santé.");
   const prev = id ? user.children.find((c) => c.id === id) : undefined;
   const healthConsentAt = wantsHealth ? prev?.healthConsentAt ?? new Date() : null;
@@ -217,7 +218,7 @@ export async function moveSession(f: FormData) {
 export async function quickSession(f: FormData) {
   const { user, child } = await getActiveChild();
   const ent = entOf(user);
-  if (!ent.fullLibrary) fail("/app/entrainements", "Les séances à la demande font partie de l'offre Essentiel.");
+  if (!ent.fullLibrary) fail("/app/entrainements", "Les séances à la demande font partie de l'abonnement Famille.");
   const today = todayIso();
   const profile = profileOf(child);
   const rules = await getRules();
@@ -332,7 +333,7 @@ export async function generateReport(f: FormData) {
   } else {
     const now = new Date(); const y = now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1; // saison d'août à juillet
     periodKey = `${y}-${y + 1}`; from = `${y}-08-01`; to = `${y + 1}-07-31`; label = `saison ${y}-${y + 1}`;
-    if (!ent.aiReports) fail("/app/bilans", "Le bilan de fin de saison fait partie de l'offre Premium.");
+    if (!ent.aiReports) fail("/app/bilans", "Le bilan de fin de saison fait partie de l'abonnement Famille.");
   }
   const facts = await buildFacts(child, from, to, label);
   const ai = ent.aiReports && facts.sessionsDone > 0 ? await narrateWithAI(facts, kind) : null;
@@ -403,6 +404,7 @@ export async function deleteMemory(f: FormData) {
 // Proposer une vidéo à la communauté : consentement explicite, puis modération humaine.
 export async function shareMedia(f: FormData) {
   const user = await requireUser();
+  if (!FEATURES.familyVideos) fail("/app/enfant/album", "Le partage de vidéos n'est pas disponible pour le moment.");
   const media = await db.media.findFirst({ where: { id: str(f, "mediaId"), ownerId: user.id } });
   if (!media) fail("/app/enfant/album", "Média introuvable.");
   if (["consentShare", "consentAuthority", "consentBoth", "consentChild", "consentOthers"].some((k) => f.get(k) !== "on")) fail("/app/enfant/album", "Toutes les confirmations sont nécessaires pour proposer une vidéo.");
@@ -535,4 +537,14 @@ export async function reportMedia(f: FormData) {
   await db.contentReport.create({ data: { mediaId: str(f, "mediaId"), userId: user.id, reason, detail: str(f, "detail").slice(0, 500) || null } });
   await audit(user.id, "content_report", str(f, "mediaId"));
   redirect((str(f, "back") || "/app/videos") + "?signale=1");
+}
+
+export async function useGiftCode(f: FormData) {
+  const user = await requireUser();
+  const err = await redeemGift(user.id, str(f, "code"));
+  if (err) fail("/app/abonnement", err);
+  await audit(user.id, "gift_redeemed");
+  await track("gift_redeemed");
+  revalidatePath("/app", "layout");
+  redirect("/app/abonnement?cadeau=1");
 }

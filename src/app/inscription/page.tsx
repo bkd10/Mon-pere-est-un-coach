@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
           <label className="flex gap-3"><input type="checkbox" name="consent" required className="mt-0.5 h-5 w-5 shrink-0 accent-pitch-600" /><span>Je suis titulaire de l'autorité parentale (ou représentant légal) de l'enfant dont je créerai le profil, et j'ai lu la <Link href="/confidentialite" className="font-bold text-pitch-700 underline" target="_blank">politique de confidentialité</Link>. <span className="text-ink-500">(obligatoire)</span></span></label>
           <label className="flex gap-3"><input type="checkbox" name="marketing" className="mt-0.5 h-5 w-5 shrink-0 accent-pitch-600" /><span>Je souhaite recevoir des conseils par e-mail (environ un par mois). Désinscription en un clic. <span className="text-ink-500">(facultatif)</span></span></label>
         </div>
-        <p className="muted">L'essai Premium de 7 jours ne demande aucune carte bancaire et ne se transforme jamais en abonnement payant sans votre accord.</p>
+        <p className="muted">L'essai gratuit de 7 jours ne demande aucune carte bancaire et ne se transforme jamais en abonnement payant sans votre accord.</p>
         <Submit>Créer mon compte</Submit>
       </form>
       <p className="muted mt-5 text-center">Déjà inscrit ? <Link href="/connexion" className="font-bold text-pitch-700">Se connecter</Link></p>

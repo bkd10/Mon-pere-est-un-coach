@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { FEATURES } from "@/lib/flags";
 import Link from "next/link";
 import { getActiveChild } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -12,6 +14,7 @@ type Entry = { heightCm?: number; weightKg?: number; sleepH?: number; fatigue?: 
 const short = (d: Date) => new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" }).format(d);
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ ok?: string; e?: string; efface?: string }> }) {
+  if (!FEATURES.health) redirect("/app/progression");
   const { child } = await getActiveChild();
   const sp = await searchParams;
   const rows = await db.developmentEntry.findMany({ where: { childId: child.id }, orderBy: { date: "asc" } });

@@ -1,6 +1,8 @@
+import { FEATURES } from "@/lib/flags";
 import { DOC_VERSIONS, LEGAL, PROCESSORS, RETENTION, show } from "@/content/legal";
 import { LegalPage, S, UL } from "@/components/LegalPage";
 export const metadata = { title: "Confidentialité" };
+export const dynamic = "force-dynamic";
 const ROWS: [string, string, string, string][] = [
   ["Compte du parent (prénom, e-mail, mot de passe chiffré)", "Créer et sécuriser le compte", "Exécution du contrat", `Durée du compte ; suppression après ${RETENTION.inactiveAccountMonths / 12} ans d'inactivité`],
   ["Profil de l'enfant (pseudonyme, mois et année de naissance, niveau, club facultatif, jours d'entraînement, objectifs, matériel)", "Construire des séances adaptées", "Exécution du contrat conclu avec le parent", "Durée du compte, ou jusqu'à suppression du profil"],
@@ -20,7 +22,7 @@ export default function Page() {
       <S t="Responsable du traitement"><p>{show(LEGAL.company)}, {show(LEGAL.address)}. Contact pour vos données : {show(LEGAL.dpo || LEGAL.email)}.</p></S>
       <S t="Quelles données, pourquoi, sur quelle base, combien de temps">
         <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tableau (défilement horizontal possible)"><table className="w-full min-w-[640px] text-sm"><thead><tr className="text-left text-xs uppercase text-ink-500"><th className="py-2 pr-2">Données</th><th className="pr-2">Finalité</th><th className="pr-2">Base légale</th><th>Conservation</th></tr></thead>
-          <tbody>{ROWS.map((r) => <tr key={r[0]} className="border-t border-ink-100 align-top">{r.map((c, i) => <td key={i} className="py-2 pr-2">{c}</td>)}</tr>)}</tbody></table></div>
+          <tbody>{ROWS.filter((r) => (FEATURES.health || !r[0].startsWith("Données de forme")) && (FEATURES.familyVideos || !r[0].startsWith("Vidéos proposées")) && (FEATURES.coach || !r[0].startsWith("Questions au coach"))).map((r) => <tr key={r[0]} className="border-t border-ink-100 align-top">{r.map((c, i) => <td key={i} className="py-2 pr-2">{c}</td>)}</tr>)}</tbody></table></div>
         <p>Les champs marqués facultatifs peuvent rester vides : le service fonctionne sans eux, avec des séances simplement moins personnalisées.</p>
       </S>
       <S t="Les enfants">
@@ -28,12 +30,12 @@ export default function Page() {
         <p><b>À lire avec votre enfant :</b> « Tes parents utilisent cette application pour jouer au foot avec toi. Elle garde tes séances et tes progrès pour te proposer des jeux adaptés. Personne d'autre que ta famille ne les voit. Si tu ne veux plus, tes parents peuvent tout effacer. »</p>
       </S>
       <S t="Intelligence artificielle">
-        <p>Les séances sont construites par un moteur de règles à partir des fiches de l'application : aucune décision n'est prise par une IA générative. Le coach conversationnel et la rédaction des bilans (offre Premium) utilisent le modèle Claude d'Anthropic. Nous lui transmettons uniquement l'âge, le niveau, les objectifs et le résumé des dernières séances de l'enfant, sans son prénom ni ses données de santé, ainsi que la question posée par le parent. N'écrivez pas d'informations d'identité ou médicales détaillées dans vos questions.</p>
+        <p>Les séances sont construites par un moteur de règles à partir des fiches de l'application : aucune décision n'est prise par une IA générative.{FEATURES.coach ? " Le coach conversationnel et la rédaction des bilans utilisent le modèle Claude d'Anthropic. Nous lui transmettons uniquement l'âge, le niveau, les objectifs et le résumé des dernières séances de l'enfant, sans son prénom ni ses données de santé, ainsi que la question posée par le parent." : " Aucune donnée n'est transmise à un service d'intelligence artificielle."}</p>
         <p>Aucune décision produisant des effets juridiques n'est prise de manière automatisée.</p>
       </S>
       <S t="Qui reçoit vos données">
         <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tableau (défilement horizontal possible)"><table className="w-full min-w-[640px] text-sm"><thead><tr className="text-left text-xs uppercase text-ink-500"><th className="py-2 pr-2">Prestataire</th><th className="pr-2">Rôle</th><th className="pr-2">Données</th><th className="pr-2">Lieu</th><th>Garanties</th></tr></thead>
-          <tbody>{PROCESSORS.map((p) => <tr key={p.role} className="border-t border-ink-100 align-top"><td className="py-2 pr-2 font-semibold">{p.name()}</td><td className="pr-2">{p.role}</td><td className="pr-2">{p.data}</td><td className="pr-2">{p.place()}</td><td>{p.guarantee}</td></tr>)}</tbody></table></div>
+          <tbody>{PROCESSORS.filter((p) => FEATURES.coach || !p.name().startsWith("Anthropic")).map((p) => <tr key={p.role} className="border-t border-ink-100 align-top"><td className="py-2 pr-2 font-semibold">{p.name()}</td><td className="pr-2">{p.role}</td><td className="pr-2">{p.data}</td><td className="pr-2">{p.place()}</td><td>{p.guarantee}</td></tr>)}</tbody></table></div>
         <p>Les modérateurs et le support de {LEGAL.brand} n'accèdent qu'aux informations nécessaires à leur mission ; les noms des enfants ne sont pas affichés dans l'administration.</p>
       </S>
       <S t="Sécurité"><p>Mots de passe hachés (bcrypt), sessions signées, données de santé chiffrées (AES-256-GCM), contrôle d'accès à chaque requête, photos et vidéos servies uniquement à leur propriétaire, journal des actions sensibles.</p></S>

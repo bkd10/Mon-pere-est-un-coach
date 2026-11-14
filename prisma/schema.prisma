@@ -511,3 +511,28 @@ model EmailLog {
   sent      Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+// Réinitialisation du mot de passe : jeton à usage unique, valable une heure, stocké haché.
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// Carte cadeau « Une saison » : paiement unique, code à saisir dans « Mon abonnement ».
+model GiftCode {
+  id             String    @id @default(cuid())
+  code           String    @unique
+  months         Int       @default(12)
+  amountCents    Int
+  purchaserEmail String
+  paid           Boolean   @default(false)
+  provider       String    @default("demo")
+  providerRef    String?
+  redeemedById   String?
+  redeemedAt     DateTime?
+  createdAt      DateTime  @default(now())
+}

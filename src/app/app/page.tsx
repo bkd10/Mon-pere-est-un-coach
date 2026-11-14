@@ -1,3 +1,4 @@
+import { FEATURES } from "@/lib/flags";
 import Link from "next/link";
 import { getActiveChild } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -35,7 +36,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const weeklyDone = challenges.some((c) => c.challengeKey === weekly.key);
   const isToday = next && isoOf(next.date) === today;
   const fb = lastDone?.feedback;
-  const state = !child.healthConsentAt ? { icon: "🌱", label: "Forme et récupération", text: "Suivi de la fatigue non activé. Vous pouvez l'activer dans le profil de votre enfant.", tone: "" } : !fb ? null : fb.pain ? { icon: "🩹", label: "Douleur signalée", text: "Exercices concernés suspendus. Consultez si elle persiste.", tone: "bg-coral-100" } : fb.energy === 1 ? { icon: "😴", label: "Très fatigué la dernière fois", text: "Priorité au repos : la suite est allégée.", tone: "bg-sun-100" } : fb.energy === 2 ? { icon: "🙂", label: "Un peu fatigué la dernière fois", text: "Séance suivante légèrement réduite.", tone: "bg-sun-100" } : { icon: "💪", label: "En forme la dernière fois", text: "On continue tranquillement, sans en rajouter.", tone: "bg-pitch-50" };
+  const state = !child.healthConsentAt ? { icon: "🌱", label: "Forme et récupération", text: FEATURES.health ? "Suivi de la fatigue non activé. Vous pouvez l'activer dans le profil de votre enfant." : "Écoutez-le : fatigué ou douloureux, on reporte. Le repos fait progresser.", tone: "" } : !fb ? null : fb.pain ? { icon: "🩹", label: "Douleur signalée", text: "Exercices concernés suspendus. Consultez si elle persiste.", tone: "bg-coral-100" } : fb.energy === 1 ? { icon: "😴", label: "Très fatigué la dernière fois", text: "Priorité au repos : la suite est allégée.", tone: "bg-sun-100" } : fb.energy === 2 ? { icon: "🙂", label: "Un peu fatigué la dernière fois", text: "Séance suivante légèrement réduite.", tone: "bg-sun-100" } : { icon: "💪", label: "En forme la dernière fois", text: "On continue tranquillement, sans en rajouter.", tone: "bg-pitch-50" };
   const adapt = next?.explanation.slice(3) ?? [];
   const reco = adapt[0] ?? reasons[0] ?? (next ? next.explanation[1] : null);
   const tip = band.parentTips[dayIdx % band.parentTips.length];
@@ -72,7 +73,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         )}
       </section>
 
-      {reco && <Section title="Le conseil du coach IA"><div className="card flex gap-3"><span className="text-2xl" aria-hidden>🧠</span><div><p className="text-sm text-ink-700">{reco}</p>{next && <Link href={`/app/seance/${next.id}#pourquoi`} className="mt-1 inline-block text-sm font-bold text-pitch-700">Pourquoi cette séance ? →</Link>}</div></div></Section>}
+      {reco && <Section title="Le conseil du jour"><div className="card flex gap-3"><span className="text-2xl" aria-hidden>🧠</span><div><p className="text-sm text-ink-700">{reco}</p>{next && <Link href={`/app/seance/${next.id}#pourquoi`} className="mt-1 inline-block text-sm font-bold text-pitch-700">Pourquoi cette séance ? →</Link>}</div></div></Section>}
 
       <div className="mb-5 grid grid-cols-2 gap-3">
         <Link href="/app/progression" className="card flex items-center gap-3"><Ring value={doneMonth} max={Math.max(plannedMonth, doneMonth, 1)} label="ce mois" /><div><div className="text-sm font-bold">Séances réalisées</div><div className="muted">⭐ {stars._sum.stars ?? 0} étoiles</div></div></Link>
