@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { entOf } from "@/lib/services";
 import { ageFromBirth, catOf, EQUIPMENT, LEVELS, metricOf } from "@/content/taxonomy";
 import ExerciseAnimation from "@/components/ExerciseAnimation";
+import ExerciseVideo from "@/components/ExerciseVideo";
 import Materiel from "@/components/Materiel";
 import ReportForm from "@/components/ReportForm";
 import SessionPlayer from "@/components/SessionPlayer";
@@ -33,7 +34,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <div>
       <PageHead title={e.name} sub={`${c.icon} ${c.label}`} back="/app/exercices" />
       {!fits && <div className="mb-3 rounded-2xl bg-sun-100 p-3 text-sm">Cet exercice est prévu pour les {e.ageMin}-{e.ageMax} ans. {child.nickname} a {age} ans : {age < e.ageMin ? "attendez un peu ou choisissez la variante facile." : "il peut servir d'échauffement ou de jeu avec un plus jeune."}</div>}
-      <ExerciseAnimation diagram={diagram} title={e.name} />
+      <ExerciseVideo fiche={{ name: e.name, why: e.why, steps: e.steps, mistakes: e.mistakes, corrections: e.corrections, success: e.successCriteria, diagram: e.diagram as { kind: string; n?: number; caption?: string } }} />
       {e.videoUrl && <video src={e.videoUrl} controls playsInline preload="metadata" className="mt-3 w-full rounded-2xl" />}
       <div className="my-4"><SessionPlayer sessionId="" blocks={[{ phase: "technique", title: e.name, minutes: e.durationMin, exerciseSlug: e.slug }]} exercises={{ [e.slug]: { slug: e.slug, name: e.name, objective: e.objective, why: e.why, reps: e.reps, steps: e.steps, mistakes: e.mistakes, corrections: e.corrections, safety: e.safety, success: e.successCriteria, variantEasy: e.variantEasy, variantMedium: e.variantMedium, variantHard: e.variantHard, equipment: e.equipment, diagram } }} nickname={child.nickname} beginner={user.beginnerMode} done={false} standalone /></div>
       <div className="card mb-4"><div className="text-sm font-bold text-pitch-700">Objectif pédagogique</div><p>{e.objective}</p><div className="mt-3 text-sm font-bold text-pitch-700">Pourquoi cet exercice est utile</div><p className="text-ink-700">{e.why}</p></div>
@@ -54,7 +55,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <Section title="Consignes de sécurité"><div className="card bg-sun-100 text-sm">{e.safety}</div></Section>
       <Section title="Vidéos">
         <div className="card text-sm text-ink-700">
-          <p>La démonstration de cet exercice est le <b>schéma animé</b> en haut de page, généré par l'application.</p>
+          <p>La vidéo de démonstration en haut de page est un <b>schéma animé</b> construit par l'application à partir de la fiche : aucun enfant n'est filmé.</p>
           {communityVideos.length > 0 && <div className="mt-3 space-y-2">{communityVideos.map((v) => <div key={v.id}><video src={`/api/media/${v.id}`} controls playsInline preload="metadata" className="w-full rounded-2xl" /><div className="muted mt-1">{v.title} · partagée par une famille, avec son accord</div><ReportForm mediaId={v.id} back={`/app/exercices/${e.slug}`} /></div>)}</div>}
           <Link href="/app/enfant/album" className="mt-3 inline-block font-bold text-pitch-700">Filmer {child.nickname} pour son album privé →</Link>
         </div>

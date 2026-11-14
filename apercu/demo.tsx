@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import ExerciseAnimation from "../src/components/ExerciseAnimation";
 import Materiel from "../src/components/Materiel";
+import ExerciseVideo from "../src/components/ExerciseVideo";
 import { BASES, LIBRARY, DECLINATIONS, type Fiche } from "../src/content/library";
 import { AGE_BANDS, bandForAge, CATEGORIES, catOf, eqLabel, GOALS, kitOf, LEVELS, PAIN_AREAS } from "../src/content/taxonomy";
 import { buildSession, rulesFromDefaults, DEFAULT_RULES, type Feedback, type History, type LibExercise, type Profile, type SessionPlan } from "../src/lib/engine";
@@ -30,7 +31,7 @@ function Fiche({ f, onOpen, onBack }: { f: Fiche; onOpen: (s: string) => void; o
       <button onClick={onBack} className="mb-1 text-sm font-bold text-pitch-700">← Retour</button>
       <h1 className="font-display text-2xl font-extrabold tracking-tight">{f.name}</h1>
       <p className="muted mb-3">{c.icon} {c.label}</p>
-      <ExerciseAnimation diagram={f.diagram} title={f.name} />
+      <ExerciseVideo fiche={{ name: f.name, why: f.why, steps: f.steps, mistakes: f.mistakes, corrections: f.corrections, success: f.success, diagram: f.diagram }} />
       <div className="card my-4"><div className="text-sm font-bold text-pitch-700">Objectif pédagogique</div><p>{f.objective}</p><div className="mt-3 text-sm font-bold text-pitch-700">Pourquoi cet exercice est utile</div><p className="text-ink-700">{f.why}</p></div>
       <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3"><I l="Âge conseillé" v={`${f.age[0]}-${f.age[1]} ans`} /><I l="Niveau" v={LEVELS.find((l) => l.key === f.level)?.label ?? ""} /><I l="Difficulté" v={`${f.difficulty} / 5`} /><I l="Durée" v={`${f.durationMin} min`} /><I l="Répétitions" v={f.reps} /><I l="Lieu" v={f.indoorOk ? "Dehors ou intérieur" : "Dehors"} /></div>
       <div className="card mb-4"><Materiel items={f.equipment} shopHref="#materiel" /></div>

@@ -12,7 +12,7 @@ const ITEMS = [
   ["/app/coach", "💬", "Coach IA", "Posez vos questions, à toute heure"],
   ["/app/bilans", "📝", "Bilans", "Bilan mensuel et bilan de fin de saison"],
   ["/app/boutique", "🛒", "Le matériel", "Kits de plots, mini-buts, échelle, ballons"],
-  ["/app/videos", "🎬", "Vidéothèque", "Démonstrations animées et vidéos de familles"],
+  ["/app/videos", "🎬", "Vidéos des exercices", "Démonstrations animées et vidéos de familles"],
   ["/app/abonnement", "💳", "Mon abonnement", "Offre, factures, résiliation"],
   ["/app/parametres", "⚙️", "Paramètres", "Notifications, modes, confidentialité"],
 ];

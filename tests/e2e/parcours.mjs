@@ -98,7 +98,10 @@ try {
   await page.goto(`${BASE}/app/exercices`); t = await text(); ok("bibliothèque filtrée sur l'âge de l'enfant", /adaptés à Lucas \(9 ans\)/.test(t)); await shot("09-bibliotheque");
   await page.goto(`${BASE}/app/exercices?age=tous`); const all = await page.locator('a[href^="/app/exercices/"]').count(); ok("bibliothèque complète", all >= 120 && /1\s?2\d\d fiches/.test(await text()), `${all} exercices de base affichés`);
   await page.goto(`${BASE}/app/exercices/slalom-des-plots`); t = await text();
-  ok("fiche exercice complète", ["Objectif pédagogique", "Étape par étape", "Erreurs fréquentes", "Variantes", "Critère de réussite", "Consignes de sécurité", "Récupération", "Pourquoi cet exercice est utile", "Matériel", "Répétitions"].every((x) => t.toLowerCase().includes(x.toLowerCase()))); await shot("10-fiche-exercice");
+  ok("fiche exercice complète", ["Objectif pédagogique", "Étape par étape", "Erreurs fréquentes", "Variantes", "Critère de réussite", "Consignes de sécurité", "Récupération", "Pourquoi cet exercice est utile", "Matériel", "Répétitions"].every((x) => t.toLowerCase().includes(x.toLowerCase()))); await page.getByRole("button", { name: /Lire la démonstration/ }).click(); await page.waitForTimeout(4200);
+  ok("vidéo de démonstration dans la fiche : lecture et consignes qui défilent", await has(/Étape 1/) && (await page.getByRole("button", { name: /Pause/ }).count()) === 1);
+  await page.getByRole("button", { name: /Pause/ }).click(); await shot("10-fiche-exercice");
+  await page.goto(`${BASE}/app/videos`); ok("page des vidéos : une vidéo par exercice", (await page.getByRole("button", { name: /Lire la démonstration/ }).count()) >= 10); await shot("10b-videos");
 
   // 7. Progression, évaluation, carnet chiffré
   await page.goto(`${BASE}/app/progression?m=jongles`);
@@ -183,7 +186,7 @@ try {
   {
     const axeSrc = (await import("node:fs")).readFileSync(new URL("../../node_modules/axe-core/axe.min.js", import.meta.url), "utf8");
     const issues = [];
-    for (const path of ["/app", "/app/entrainements", "/app/exercices", "/app/exercices/slalom-des-plots", "/app/progression", "/app/calendrier", "/app/enfant", "/app/guide", "/app/boutique", "/app/abonnement", "/app/parametres", "/app/coach", "/app/bilans"]) {
+    for (const path of ["/app", "/app/videos", "/app/entrainements", "/app/exercices", "/app/exercices/slalom-des-plots", "/app/progression", "/app/calendrier", "/app/enfant", "/app/guide", "/app/boutique", "/app/abonnement", "/app/parametres", "/app/coach", "/app/bilans"]) {
       await page.goto(BASE + path); await page.addScriptTag({ content: axeSrc });
       const res = await page.evaluate(async () => (await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa"] })).violations.map((v) => `${v.id}(${v.nodes.length}) ${v.nodes[0]?.target}`));
       issues.push(...res.map((x) => `${path} ${x}`));

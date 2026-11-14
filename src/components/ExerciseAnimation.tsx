@@ -107,7 +107,7 @@ function Motion({ m, dur }: { m: Mover; dur: number }) {
 }
 const origin = (m: Mover): Pt => (m.path ? [0, 0] : m.at);
 
-export default function ExerciseAnimation({ diagram, title, compact = false }: { diagram: { kind: string; n?: number; caption?: string }; title?: string; compact?: boolean }) {
+export default function ExerciseAnimation({ diagram, title, compact = false, controls = true }: { diagram: { kind: string; n?: number; caption?: string }; title?: string; compact?: boolean; controls?: boolean }) {
   const ref = useRef<SVGSVGElement>(null);
   const [paused, setPaused] = useState(false);
   const s = build(diagram.kind, diagram.n);
@@ -132,7 +132,7 @@ export default function ExerciseAnimation({ diagram, title, compact = false }: {
             </g>
           )}
         </svg>
-        <button type="button" onClick={toggle} aria-label={paused ? "Lire l'animation" : "Mettre l'animation en pause"} className="absolute bottom-2 right-2 grid h-9 w-9 place-items-center rounded-full bg-black/45 text-white backdrop-blur">{paused ? "▶" : "❚❚"}</button>
+        {controls && <button type="button" onClick={toggle} aria-label={paused ? "Lire l'animation" : "Mettre l'animation en pause"} className="absolute bottom-2 right-2 grid h-9 w-9 place-items-center rounded-full bg-black/45 text-white backdrop-blur">{paused ? "▶" : "❚❚"}</button>}
       </div>
       {!compact && (
         <figcaption className="flex items-center justify-between gap-3 px-3 py-2 text-xs text-white/90">

@@ -115,6 +115,16 @@
     "detail": ""
   },
   {
+    "name": "vidéo de démonstration dans la fiche : lecture et consignes qui défilent",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "page des vidéos : une vidéo par exercice",
+    "pass": true,
+    "detail": ""
+  },
+  {
     "name": "carnet de progression : courbe et tendance",
     "pass": true,
     "detail": ""

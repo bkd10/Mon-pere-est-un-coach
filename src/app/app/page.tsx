@@ -1,3 +1,4 @@
+import ExerciseVideo from "@/components/ExerciseVideo";
 import { FEATURES } from "@/lib/flags";
 import Link from "next/link";
 import { getActiveChild } from "@/lib/auth";
@@ -39,6 +40,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   const state = !child.healthConsentAt ? { icon: "🌱", label: "Forme et récupération", text: FEATURES.health ? "Suivi de la fatigue non activé. Vous pouvez l'activer dans le profil de votre enfant." : "Écoutez-le : fatigué ou douloureux, on reporte. Le repos fait progresser.", tone: "" } : !fb ? null : fb.pain ? { icon: "🩹", label: "Douleur signalée", text: "Exercices concernés suspendus. Consultez si elle persiste.", tone: "bg-coral-100" } : fb.energy === 1 ? { icon: "😴", label: "Très fatigué la dernière fois", text: "Priorité au repos : la suite est allégée.", tone: "bg-sun-100" } : fb.energy === 2 ? { icon: "🙂", label: "Un peu fatigué la dernière fois", text: "Séance suivante légèrement réduite.", tone: "bg-sun-100" } : { icon: "💪", label: "En forme la dernière fois", text: "On continue tranquillement, sans en rajouter.", tone: "bg-pitch-50" };
   const adapt = next?.explanation.slice(3) ?? [];
   const reco = adapt[0] ?? reasons[0] ?? (next ? next.explanation[1] : null);
+  const clips = await db.exercise.findMany({ where: { published: true, variantLabel: null, ageMin: { lte: age }, ageMax: { gte: age }, ...(ent.fullLibrary ? {} : { isFree: true }) }, orderBy: { slug: "asc" } });
+  const clip = clips.length ? clips[dayIdx % clips.length] : null;
   const tip = band.parentTips[dayIdx % band.parentTips.length];
   const hour = Number(new Intl.DateTimeFormat("fr-FR", { hour: "numeric", hour12: false, timeZone: "Europe/Paris" }).format(new Date()));
 
@@ -79,6 +82,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         <Link href="/app/progression" className="card flex items-center gap-3"><Ring value={doneMonth} max={Math.max(plannedMonth, doneMonth, 1)} label="ce mois" /><div><div className="text-sm font-bold">Séances réalisées</div><div className="muted">⭐ {stars._sum.stars ?? 0} étoiles</div></div></Link>
         <div className={`card ${state?.tone ?? ""}`}><div className="text-2xl" aria-hidden>{state?.icon ?? "🌱"}</div><div className="text-sm font-bold">{state?.label ?? "Forme et récupération"}</div><div className="muted">{state?.text ?? "Répondez au questionnaire après la première séance."}</div></div>
       </div>
+
+      {clip && <Section title="La vidéo du jour" action={<More href="/app/videos">Toutes les vidéos</More>}><Link href={`/app/exercices/${clip.slug}`} className="mb-1.5 block px-1 font-bold">{clip.name} →</Link><ExerciseVideo fiche={{ name: clip.name, why: clip.why, steps: clip.steps, mistakes: clip.mistakes, corrections: clip.corrections, success: clip.successCriteria, diagram: clip.diagram as { kind: string; n?: number; caption?: string } }} /></Section>}
 
       <Section title="Défi du jour · 5 minutes">
         <div className="card">
