@@ -8,7 +8,7 @@ const sans = Nunito({ subsets: ["latin"], variable: "--font-sans", display: "swa
 const display = Outfit({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: `${APP_NAME} — le foot en famille, pas à pas`, template: `%s · ${APP_NAME}` },
+  title: { default: `${APP_NAME} — on progresse ensemble`, template: `%s · ${APP_NAME}` },
   description: "Vous n'avez pas besoin d'être entraîneur pour aider votre enfant à progresser au football. Séances guidées, exercices expliqués, repos respecté.",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icons/icon.svg", apple: "/icons/icon.svg" },

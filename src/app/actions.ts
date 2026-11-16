@@ -368,7 +368,7 @@ export async function addMemory(f: FormData) {
   const ent = entOf(user);
   const title = str(f, "title").slice(0, 80);
   if (!title) fail("/app/enfant/album", "Donnez un titre à ce souvenir.");
-  const file = f.get("file");
+  const file = FEATURES.uploads ? f.get("file") : null;
   let mediaId: string | undefined;
   if (file instanceof File && file.size > 0) {
     const ext = MIME[file.type];

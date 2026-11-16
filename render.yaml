@@ -1,0 +1,66 @@
+# Mise en ligne en un clic sur Render (render.com) : « New » → « Blueprint » → choisir ce dépôt.
+# Région Francfort (Union européenne). Vérifier les formules et leurs prix au moment de la création.
+services:
+  - type: web
+    name: mon-duo-foot
+    runtime: node
+    region: frankfurt
+    plan: starter
+    buildCommand: npm ci --include=dev && npx prisma generate && npm run build
+    startCommand: npm run release && npm start
+    healthCheckPath: /mentions-legales
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: mon-duo-foot-db, property: connectionString }
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: DATA_ENCRYPTION_KEY
+        generateValue: true
+      - key: NEXT_PUBLIC_APP_NAME
+        value: Mon Duo Foot
+      - key: FOUNDER_LINE
+        value: Un projet porté par un professionnel du football diplômé.
+      - key: GIFT_PRICE_CENTS
+        value: "2900"
+      # À renseigner dans le tableau de bord Render (jamais dans le dépôt) :
+      - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.monduofoot.fr
+      - { key: ADMIN_EMAIL, sync: false }
+      - { key: ADMIN_PASSWORD, sync: false }
+      - { key: STRIPE_SECRET_KEY, sync: false }
+      - { key: STRIPE_WEBHOOK_SECRET, sync: false }
+      - { key: SMTP_URL, sync: false }
+      - { key: MAIL_FROM, sync: false }
+      - { key: LEGAL_COMPANY, sync: false }
+      - { key: LEGAL_FORM, sync: false }
+      - { key: LEGAL_ADDRESS, sync: false }
+      - { key: LEGAL_SIREN, sync: false }
+      - { key: LEGAL_VAT, sync: false }
+      - { key: LEGAL_DIRECTOR, sync: false }
+      - { key: LEGAL_EMAIL, sync: false }
+      - { key: LEGAL_PHONE, sync: false }
+      - { key: LEGAL_HOST_NAME, sync: false }
+      - { key: LEGAL_HOST_ADDRESS, sync: false }
+      - { key: LEGAL_HOST_PHONE, sync: false }
+      - { key: LEGAL_DATA_LOCATION, sync: false }
+      - { key: LEGAL_MEDIATOR_NAME, sync: false }
+      - { key: LEGAL_MEDIATOR_URL, sync: false }
+  - type: cron
+    name: mon-duo-foot-quotidien
+    runtime: node
+    region: frankfurt
+    schedule: "15 3 * * *"
+    buildCommand: npm ci --include=dev && npx prisma generate
+    startCommand: npm run daily
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: mon-duo-foot-db, property: connectionString }
+      - fromGroup: mon-duo-foot-mail
+databases:
+  - name: mon-duo-foot-db
+    region: frankfurt
+envVarGroups:
+  - name: mon-duo-foot-mail
+    envVars:
+      - { key: SMTP_URL, sync: false }
+      - { key: MAIL_FROM, sync: false }
+      - { key: NEXT_PUBLIC_APP_URL, sync: false }

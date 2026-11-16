@@ -436,7 +436,7 @@ model UsageEvent {
   @@unique([name, day])
 }
 
-// Boutique : kits et matériel vendus par Petit Pont. Prix et lien de commande saisis dans l'administration.
+// Boutique : kits et matériel vendus par Mon Duo Foot. Prix et lien de commande saisis dans l'administration.
 model Product {
   id          String   @id @default(cuid())
   slug        String   @unique

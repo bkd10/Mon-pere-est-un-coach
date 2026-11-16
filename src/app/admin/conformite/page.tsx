@@ -42,7 +42,7 @@ export default async function Page() {
     { n: 16, t: "Navigation clavier", s: "ok", d: "Focus visible, lien « Aller au contenu », Échap pour quitter la séance guidée ; parcours au clavier testé.", href: "/accessibilite" },
     { n: 17, t: "Accord des parents", s: "ok", d: "Attestation d'autorité parentale à l'inscription ; santé : accord du parent + de l'enfant avant 15 ans ; vidéo : deux parents et enfant associé (art. 372-1 C. civ.)." },
     { n: 18, t: "Lien de désinscription", s: mailEnabled() ? "ok" : "warn", d: `Lien en un clic sans connexion (+ en-tête List-Unsubscribe) dans tout e-mail de conseils ; réglage dans Paramètres. ${mailEnabled() ? "" : "Aucun serveur d'envoi configuré (SMTP_URL) : les e-mails sont seulement journalisés."}` },
-    { n: 19, t: "Droits sur polices et images", s: "warn", d: "Polices Nunito et Outfit sous licence SIL OFL (usage commercial autorisé), logo et schémas créés pour l'application, aucune image de tiers. Reste à vérifier la disponibilité de la marque « Petit Pont » (INPI, EUIPO) et des noms de domaine." },
+    { n: 19, t: "Droits sur polices et images", s: "warn", d: "Polices Nunito et Outfit sous licence SIL OFL (usage commercial autorisé), logo et schémas créés pour l'application, aucune image de tiers. Reste à vérifier la disponibilité de la marque « Mon Duo Foot » (INPI, EUIPO) et des noms de domaine." },
     { n: 20, t: "Suppression des données", s: deletions ? "todo" : "ok", d: `Suppression immédiate du compte, d'un enfant, du carnet ou d'un média ; export JSON ; formulaire sans connexion. Factures conservées 10 ans, anonymisées. ${deletions ? `${deletions} demande(s) en attente.` : ""}`, href: "/supprimer-mes-donnees" },
   ];
   const extra: { t: string; s: St; d: string }[] = [

@@ -7,7 +7,7 @@ export const DEFAULT_PLANS = [
   // v1 : une seule offre payante. Les offres Essentiel et Premium existent toujours en base, désactivées.
   { tier: "ESSENTIEL" as PlanTier, name: "Essentiel", tagline: "Offre non commercialisée.", monthlyCents: 399, yearlyCents: 3590, trialDays: 7, maxChildren: 1, sort: 8, active: false, features: [] as string[] },
   { tier: "PREMIUM" as PlanTier, name: "Premium", tagline: "Offre non commercialisée.", monthlyCents: 699, yearlyCents: 5990, trialDays: 7, maxChildren: 3, sort: 9, active: false, features: [] as string[] },
-  { tier: "FAMILLE" as PlanTier, name: "Famille", tagline: "Tout Petit Pont, pour toute la fratrie.", monthlyCents: 499, yearlyCents: 3490, trialDays: 7, maxChildren: 3, sort: 1, active: true,
+  { tier: "FAMILLE" as PlanTier, name: "Famille", tagline: "Toute l'application, pour toute la fratrie.", monthlyCents: 499, yearlyCents: 3490, trialDays: 7, maxChildren: 3, sort: 1, active: true,
     features: ["Jusqu'à 3 enfants", "Parcours personnalisé par âge et par niveau", "Séances guidées illimitées, adaptées après chaque retour", "Tous les exercices et leurs progressions", "Calendrier autour du club et des matchs", "Carnet de progression, mini-évaluations et bilans", "Tous les guides parents", "Album de souvenirs"] },
 ];
 

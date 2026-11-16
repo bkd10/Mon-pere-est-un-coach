@@ -1,8 +1,8 @@
-# Petit Pont — le foot en famille, pas à pas
+# Mon Duo Foot — le foot en famille, pas à pas
 
 Application SaaS qui aide les parents (même débutants) à accompagner leur enfant de 4 à 17 ans au football : séances guidées, exercices expliqués, repos respecté, progrès suivis, dépenses maîtrisées.
 
-> **Nom.** « Pour les Nuls » est une marque déposée : le produit porte le nom de travail **Petit Pont**, modifiable en une ligne (`NEXT_PUBLIC_APP_NAME`). Sa disponibilité reste à vérifier (INPI, nom de domaine).
+> **Nom.** « Pour les Nuls » est une marque déposée : le produit porte le nom de travail **Mon Duo Foot**, modifiable en une ligne (`NEXT_PUBLIC_APP_NAME`). Sa disponibilité reste à vérifier (INPI, nom de domaine).
 
 ## Démarrer
 
@@ -89,6 +89,15 @@ Déjà en place dans le code :
 - Contrôles automatiques : aucune requête vers un service tiers, aucun cookie avant connexion, accessibilité WCAG A/AA (axe-core) sur 19 écrans.
 
 À faire par vous avant d'ouvrir : renseigner les variables `LEGAL_*` de `.env`, adhérer à un médiateur de la consommation, choisir l'hébergeur (UE, éventuellement HDS), configurer `SMTP_URL` et Stripe, planifier `npm run daily` chaque nuit, signer les contrats de sous-traitance, réaliser l'analyse d'impact (AIPD), faire relire les fiches par un éducateur diplômé et tous les textes légaux par un avocat, vérifier la marque.
+
+## Mise en ligne
+
+Le fichier `render.yaml` décrit toute l'installation (site, base PostgreSQL, tâche nocturne) chez Render, région Francfort :
+1. Sur render.com : « New » → « Blueprint » → choisir ce dépôt.
+2. Renseigner les variables demandées (adresse du site, compte administrateur, Stripe, e-mails, informations légales).
+3. Brancher le nom de domaine dans « Settings » → « Custom Domains », puis créer le webhook Stripe vers `/api/stripe/webhook`.
+
+À chaque démarrage, `npm run release` met la base à jour et recharge les contenus. Les photos de l'album sont désactivées par défaut (`FEATURE_UPLOADS`) : elles demandent un disque persistant.
 
 ## Configuration de lancement (v1)
 

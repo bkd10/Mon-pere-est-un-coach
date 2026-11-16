@@ -6,6 +6,7 @@ function key(): Buffer {
   if (raw) {
     const k = Buffer.from(raw, "base64");
     if (k.length === 32) return k;
+    if (raw.length >= 32) return createHash("sha256").update(raw).digest(); // secret généré par l'hébergeur : on en dérive une clé de 32 octets
   }
   if (process.env.NODE_ENV === "production") throw new Error("DATA_ENCRYPTION_KEY manquante ou invalide (32 octets en base64).");
   return createHash("sha256").update(process.env.AUTH_SECRET || "dev-only-key").digest();

@@ -32,7 +32,8 @@ async function main() {
     await db.guide.upsert({ where: { slug: g.slug }, update: data, create: { slug: g.slug, ...data } });
   }
   const email = (process.env.ADMIN_EMAIL || "admin@petitpont.local").toLowerCase();
-  if (!(await db.user.findUnique({ where: { email } }))) {
+  if (process.env.NODE_ENV === "production" && !process.env.ADMIN_PASSWORD) console.warn("ADMIN_PASSWORD non défini : aucun compte administrateur créé.");
+  else if (!(await db.user.findUnique({ where: { email } }))) {
     await db.user.create({ data: { email, firstName: "Admin", role: "ADMIN", passwordHash: await bcrypt.hash(process.env.ADMIN_PASSWORD || "ChangeMoi!2026", 12), consentAt: new Date(), consentVersion: "2026-11" } });
     console.log(`Compte administrateur créé : ${email}`);
   }

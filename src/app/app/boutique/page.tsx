@@ -36,7 +36,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
   };
   return (
     <div>
-      <PageHead title="Le matériel Petit Pont" sub="Le matériel utilisé dans les fiches, sélectionné par l'équipe Petit Pont." back="/app/menu" />
+      <PageHead title="Le matériel Mon Duo Foot" sub="Le matériel utilisé dans les fiches, sélectionné par notre équipe." back="/app/menu" />
       {sp.ok && <Notice tone="ok">C'est noté. Nous vous préviendrons dans l'application dès que ce matériel sera disponible.</Notice>}
       {reco && <Section title="Le kit conseillé"><Card p={reco} featured /></Section>}
       <Section title="Les autres kits"><div className="space-y-3">{bundles.filter((p) => p.id !== reco?.id).map((p) => <Card key={p.id} p={p} />)}</div></Section>

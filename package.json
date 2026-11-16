@@ -1,5 +1,5 @@
 {
-  "name": "petit-pont",
+  "name": "mon-duo-foot",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "node tests/e2e/parcours.mjs",
     "daily": "tsx scripts/daily.ts",
-    "videos": "node scripts/videos.mjs"
+    "videos": "node scripts/videos.mjs",
+    "release": "prisma db push --skip-generate && tsx prisma/seed.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.7.0",
@@ -48,5 +49,8 @@
       "postcss": "^8.5.32"
     },
     "deepmerge-ts": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

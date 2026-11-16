@@ -210,8 +210,8 @@ try {
   await g.goto(`${BASE}/mot-de-passe-oublie`); await g.fill("#email", "personne@test.local"); await g.getByRole("button", { name: "Recevoir le lien" }).click(); ok("mot de passe oublié : même réponse que le compte existe ou non", await has(/Si un compte existe/, g));
   await g.goto(`${BASE}/reinitialiser?t=faux`); await g.fill("#password", "nouveau-mot-de-passe"); await g.getByRole("button", { name: "Enregistrer" }).click(); ok("réinitialisation : jeton invalide refusé", await has(/n'est plus valable/, g));
   await g.goto(`${BASE}/cadeau`); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.check('input[name="cgv"]'); await g.getByRole("button", { name: /Commander avec obligation de paiement/ }).click();
-  ok("carte cadeau : achat et code délivré", await has(/PP-[0-9A-F]{5}-[0-9A-F]{5}/, g)); await g.screenshot({ path: `${SHOTS}/21-cadeau.png` });
-  const code = (await g.locator("body").innerText()).match(/PP-[0-9A-F]{5}-[0-9A-F]{5}/)?.[0];
+  ok("carte cadeau : achat et code délivré", await has(/DUO-[0-9A-F]{5}-[0-9A-F]{5}/, g)); await g.screenshot({ path: `${SHOTS}/21-cadeau.png` });
+  const code = (await g.locator("body").innerText()).match(/DUO-[0-9A-F]{5}-[0-9A-F]{5}/)?.[0];
   await g.goto(`${BASE}/inscription`); await g.fill("#firstName", "Cadeau"); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.fill("#password", "motdepasse-test-3"); await g.check('input[name="cgu"]'); await g.check('input[name="consent"]'); await g.getByRole("button", { name: "Créer mon compte" }).click(); await g.waitForURL("**/app/onboarding");
   await g.goto(`${BASE}/app/abonnement`); await g.fill('input[name="code"]', code ?? ""); await g.getByRole("button", { name: "Activer" }).click();
   ok("carte cadeau : code activé, 12 mois sans renouvellement", await has(/Code cadeau activé/, g) && await has(/Résilié — accès jusqu'au/, g));

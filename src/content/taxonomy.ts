@@ -1,7 +1,7 @@
 // Référentiel pédagogique : catégories, tranches d'âge, indicateurs, badges, défis.
 // Les tranches d'âge sont des repères : le moteur tient aussi compte du niveau et du ressenti.
 
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Petit Pont";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Mon Duo Foot";
 
 export const CATEGORIES = [
   { key: "conduite", label: "Conduite de balle", icon: "🏃", color: "#1ca463" },
@@ -52,7 +52,7 @@ export const EQUIPMENT = [
   { key: "echelle", label: "Échelle de rythme (ou traits à la craie)" },
 ] as const;
 
-// Matériel d'entraînement : le vrai matériel (vendu dans le kit Petit Pont) est présenté en premier ;
+// Matériel d'entraînement : le vrai matériel (vendu dans le kit Mon Duo Foot) est présenté en premier ;
 // un remplaçant maison est indiqué pour commencer en attendant de l'avoir.
 export type KitItem = { key: string; label: string; icon: string; qty: string; use: string; free: string };
 export const KIT: KitItem[] = [

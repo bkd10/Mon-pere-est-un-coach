@@ -39,7 +39,7 @@ export async function buyGift(f: FormData) {
   const email = str(f, "email").toLowerCase();
   if (!z.string().email().safeParse(email).success) redirect("/cadeau?e=" + encodeURIComponent("Indiquez une adresse e-mail valide : le code cadeau y sera envoyé."));
   if (f.get("cgv") !== "on") redirect("/cadeau?e=" + encodeURIComponent("Merci d'accepter les conditions générales de vente."));
-  const code = "PP-" + randomBytes(5).toString("hex").toUpperCase().replace(/(.{5})(.{5})/, "$1-$2");
+  const code = "DUO-" + randomBytes(5).toString("hex").toUpperCase().replace(/(.{5})(.{5})/, "$1-$2");
   const gift = await db.giftCode.create({ data: { code, amountCents: giftPriceCents(), purchaserEmail: email } });
   await track("gift_started");
   const res = await startGiftCheckout(gift.id);

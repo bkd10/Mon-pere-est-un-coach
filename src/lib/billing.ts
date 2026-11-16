@@ -148,7 +148,7 @@ export async function markGiftPaid(giftId: string, provider: string, providerRef
   const paid = await db.giftCode.update({ where: { id: giftId }, data: { paid: true, provider, providerRef } });
   await db.payment.create({ data: { amountCents: g.amountCents, status: "paid", description: `${APP_NAME} — carte cadeau Une saison${provider === "demo" ? " (démonstration, aucun débit)" : ""}`, invoiceNumber: await nextInvoiceNumber(), provider, providerRef } });
   const { sendEmail } = await import("./mail");
-  await sendEmail({ to: g.purchaserEmail, subject: "Votre carte cadeau Petit Pont", kind: "cadeau", text: `Merci !\n\nVoici le code cadeau à offrir : ${g.code}\n\nIl donne ${g.months} mois d'abonnement Famille (jusqu'à 3 enfants), sans renouvellement automatique.\nPour l'utiliser : créer un compte sur ${base()}/inscription, puis « Mon abonnement » → « J'ai un code cadeau ».\n\nVous disposez de 14 jours pour vous rétracter tant que le code n'a pas été utilisé.` });
+  await sendEmail({ to: g.purchaserEmail, subject: "Votre carte cadeau Mon Duo Foot", kind: "cadeau", text: `Merci !\n\nVoici le code cadeau à offrir : ${g.code}\n\nIl donne ${g.months} mois d'abonnement Famille (jusqu'à 3 enfants), sans renouvellement automatique.\nPour l'utiliser : créer un compte sur ${base()}/inscription, puis « Mon abonnement » → « J'ai un code cadeau ».\n\nVous disposez de 14 jours pour vous rétracter tant que le code n'a pas été utilisé.` });
   return paid;
 }
 
