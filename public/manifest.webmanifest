@@ -1,2 +1,2 @@
-{ "name": "Mon Duo Foot — on progresse ensemble", "short_name": "Mon Duo Foot", "description": "Accompagnez votre enfant au football, pas à pas.", "start_url": "/app", "scope": "/", "display": "standalone", "orientation": "portrait", "background_color": "#f5f8f6", "theme_color": "#0f844f", "lang": "fr",
+{ "name": "Premiers Pas Foot — un pas après l'autre", "short_name": "Premiers Pas Foot", "description": "Accompagnez votre enfant au football, pas à pas.", "start_url": "/app", "scope": "/", "display": "standalone", "orientation": "portrait", "background_color": "#f5f8f6", "theme_color": "#0f844f", "lang": "fr",
   "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }] }

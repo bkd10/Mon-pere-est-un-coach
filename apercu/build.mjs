@@ -6,11 +6,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const r = await build({ entryPoints: [`${here}/demo.tsx`], bundle: true, minify: true, write: false, format: "iife", target: "es2019", jsx: "transform",
-  alias: { "react-dom/client": `${here}/react-dom-shim.js`, react: `${here}/react-shim.js`, "@": `${here}/../src` }, define: { "process.env.NEXT_PUBLIC_APP_NAME": '"Mon Duo Foot"', "process.env.NODE_ENV": '"production"' } });
+  alias: { "react-dom/client": `${here}/react-dom-shim.js`, react: `${here}/react-shim.js`, "@": `${here}/../src` }, define: { "process.env.NEXT_PUBLIC_APP_NAME": '"Premiers Pas Foot"', "process.env.NODE_ENV": '"production"' } });
 const js = r.outputFiles[0].text.replace(/<\/script/g, "<\\/script");
 writeFileSync(`${here}/in.css`, readFileSync(`${here}/../src/app/globals.css`, "utf8").replace("@tailwind base;", ""));
 const css = execSync(`npx tailwindcss -c ${here}/tailwind.config.cjs -i ${here}/in.css --minify`, { cwd: `${here}/..`, stdio: ["ignore", "pipe", "ignore"] }).toString();
-const html = `<title>Mon Duo Foot</title>
+const html = `<title>Premiers Pas Foot</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@700;800&display=swap">
 <style>

@@ -16,7 +16,7 @@ const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, locale: "fr-FR" });
 const page = await ctx.newPage();
 const errors = [];
-page.on("pageerror", (e) => errors.push(String(e)));
+page.on("pageerror", (e) => errors.push(`${page.url().replace(BASE, "")} ${String(e).slice(0, 90)}`));
 page.on("response", (r) => { if (r.status() >= 500) errors.push(`${r.status()} ${r.url()}`); });
 const shot = async (n) => { await page.evaluate(() => window.scrollTo(0, 0)); await page.waitForTimeout(150); await page.screenshot({ path: `${SHOTS}/${n}.png`, fullPage: false }); };
 // Les actions serveur naviguent côté client : on attend le contenu, pas seulement l'URL.
@@ -210,8 +210,8 @@ try {
   await g.goto(`${BASE}/mot-de-passe-oublie`); await g.fill("#email", "personne@test.local"); await g.getByRole("button", { name: "Recevoir le lien" }).click(); ok("mot de passe oublié : même réponse que le compte existe ou non", await has(/Si un compte existe/, g));
   await g.goto(`${BASE}/reinitialiser?t=faux`); await g.fill("#password", "nouveau-mot-de-passe"); await g.getByRole("button", { name: "Enregistrer" }).click(); ok("réinitialisation : jeton invalide refusé", await has(/n'est plus valable/, g));
   await g.goto(`${BASE}/cadeau`); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.check('input[name="cgv"]'); await g.getByRole("button", { name: /Commander avec obligation de paiement/ }).click();
-  ok("carte cadeau : achat et code délivré", await has(/DUO-[0-9A-F]{5}-[0-9A-F]{5}/, g)); await g.screenshot({ path: `${SHOTS}/21-cadeau.png` });
-  const code = (await g.locator("body").innerText()).match(/DUO-[0-9A-F]{5}-[0-9A-F]{5}/)?.[0];
+  ok("carte cadeau : achat et code délivré", await has(/PAS-[0-9A-F]{5}-[0-9A-F]{5}/, g)); await g.screenshot({ path: `${SHOTS}/21-cadeau.png` });
+  const code = (await g.locator("body").innerText()).match(/PAS-[0-9A-F]{5}-[0-9A-F]{5}/)?.[0];
   await g.goto(`${BASE}/inscription`); await g.fill("#firstName", "Cadeau"); await g.fill("#email", `cadeau-${stamp}@test.local`); await g.fill("#password", "motdepasse-test-3"); await g.check('input[name="cgu"]'); await g.check('input[name="consent"]'); await g.getByRole("button", { name: "Créer mon compte" }).click(); await g.waitForURL("**/app/onboarding");
   await g.goto(`${BASE}/app/abonnement`); await g.fill('input[name="code"]', code ?? ""); await g.getByRole("button", { name: "Activer" }).click();
   ok("carte cadeau : code activé, 12 mois sans renouvellement", await has(/Code cadeau activé/, g) && await has(/Résilié — accès jusqu'au/, g));

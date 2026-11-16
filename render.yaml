@@ -2,7 +2,7 @@
 # Région Francfort (Union européenne). Vérifier les formules et leurs prix au moment de la création.
 services:
   - type: web
-    name: mon-duo-foot
+    name: premiers-pas-foot
     runtime: node
     region: frankfurt
     plan: starter
@@ -11,19 +11,19 @@ services:
     healthCheckPath: /mentions-legales
     envVars:
       - key: DATABASE_URL
-        fromDatabase: { name: mon-duo-foot-db, property: connectionString }
+        fromDatabase: { name: premiers-pas-foot-db, property: connectionString }
       - key: AUTH_SECRET
         generateValue: true
       - key: DATA_ENCRYPTION_KEY
         generateValue: true
       - key: NEXT_PUBLIC_APP_NAME
-        value: Mon Duo Foot
+        value: Premiers Pas Foot
       - key: FOUNDER_LINE
         value: Un projet porté par un professionnel du football diplômé.
       - key: GIFT_PRICE_CENTS
         value: "2900"
       # À renseigner dans le tableau de bord Render (jamais dans le dépôt) :
-      - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.monduofoot.fr
+      - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.premierspasfoot.fr
       - { key: ADMIN_EMAIL, sync: false }
       - { key: ADMIN_PASSWORD, sync: false }
       - { key: STRIPE_SECRET_KEY, sync: false }
@@ -45,7 +45,7 @@ services:
       - { key: LEGAL_MEDIATOR_NAME, sync: false }
       - { key: LEGAL_MEDIATOR_URL, sync: false }
   - type: cron
-    name: mon-duo-foot-quotidien
+    name: premiers-pas-foot-quotidien
     runtime: node
     region: frankfurt
     schedule: "15 3 * * *"
@@ -53,13 +53,13 @@ services:
     startCommand: npm run daily
     envVars:
       - key: DATABASE_URL
-        fromDatabase: { name: mon-duo-foot-db, property: connectionString }
-      - fromGroup: mon-duo-foot-mail
+        fromDatabase: { name: premiers-pas-foot-db, property: connectionString }
+      - fromGroup: premiers-pas-foot-mail
 databases:
-  - name: mon-duo-foot-db
+  - name: premiers-pas-foot-db
     region: frankfurt
 envVarGroups:
-  - name: mon-duo-foot-mail
+  - name: premiers-pas-foot-mail
     envVars:
       - { key: SMTP_URL, sync: false }
       - { key: MAIL_FROM, sync: false }

@@ -12,7 +12,7 @@ const dir = `${root}/videos`, out = `${dir}/out`, FPS = 30;
 mkdirSync(out, { recursive: true });
 
 // 1. Page autonome : moteur d'animation de l'application + polices embarquées (aucun accès réseau).
-const r = await build({ entryPoints: [`${dir}/video.tsx`], bundle: true, minify: true, write: false, format: "iife", jsx: "automatic", alias: { "@": `${root}/src` }, define: { "process.env.NEXT_PUBLIC_APP_NAME": '"Mon Duo Foot"', "process.env.NODE_ENV": '"production"' } });
+const r = await build({ entryPoints: [`${dir}/video.tsx`], bundle: true, minify: true, write: false, format: "iife", jsx: "automatic", alias: { "@": `${root}/src` }, define: { "process.env.NEXT_PUBLIC_APP_NAME": '"Premiers Pas Foot"', "process.env.NODE_ENV": '"production"' } });
 const font = (pkg, file, family, weight) => `@font-face{font-family:${family};font-weight:${weight};src:url(data:font/woff2;base64,${readFileSync(`${root}/node_modules/@fontsource/${pkg}/files/${file}`).toString("base64")}) format("woff2")}`;
 writeFileSync(`${dir}/in.css`, "@tailwind utilities;");
 const tw = execSync(`npx tailwindcss -c ${dir}/tailwind.config.cjs -i ${dir}/in.css --minify`, { cwd: root, stdio: ["ignore", "pipe", "ignore"] }).toString();
@@ -38,7 +38,7 @@ for (const b of list) {
   execFileSync("ffmpeg", ["-v", "error", "-y", "-framerate", String(FPS), "-i", `${frames}/%04d.jpg`, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-movflags", "+faststart", `${out}/${b.slug}.mp4`]);
   rmSync(frames, { recursive: true, force: true });
   // Légende prête à coller avec la vidéo.
-  writeFileSync(`${out}/${b.slug}.txt`, `${b.name} — ${b.objective}\nPour les ${b.age[0]}-${b.age[1]} ans, à faire à la maison avec un parent. La séance complète est gratuite dans l'application Mon Duo Foot.\n\n#football #foot #entrainementfoot #footenfant #parents #exercicefoot #petitpont\n`);
+  writeFileSync(`${out}/${b.slug}.txt`, `${b.name} — ${b.objective}\nPour les ${b.age[0]}-${b.age[1]} ans, à faire à la maison avec un parent. La séance complète est gratuite dans l'application Premiers Pas Foot.\n\n#football #foot #entrainementfoot #footenfant #parents #exercicefoot #petitpont\n`);
   console.log(`✔ ${b.slug}.mp4 (${dur.toFixed(1)} s)`);
 }
 await browser.close();

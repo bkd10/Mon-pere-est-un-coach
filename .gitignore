@@ -5,4 +5,4 @@ storage/*
 !storage/.gitkeep
 *.tsbuildinfo
 next-env.d.ts
-mon-duo-foot.zip
+*.zip

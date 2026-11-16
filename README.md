@@ -1,8 +1,8 @@
-# Mon Duo Foot — le foot en famille, pas à pas
+# Premiers Pas Foot — le foot en famille, pas à pas
 
 Application SaaS qui aide les parents (même débutants) à accompagner leur enfant de 4 à 17 ans au football : séances guidées, exercices expliqués, repos respecté, progrès suivis, dépenses maîtrisées.
 
-> **Nom.** « Pour les Nuls » est une marque déposée : le produit porte le nom de travail **Mon Duo Foot**, modifiable en une ligne (`NEXT_PUBLIC_APP_NAME`). Sa disponibilité reste à vérifier (INPI, nom de domaine).
+> **Nom.** « Pour les Nuls » est une marque déposée : le produit porte le nom de travail **Premiers Pas Foot**, modifiable en une ligne (`NEXT_PUBLIC_APP_NAME`). Sa disponibilité reste à vérifier (INPI, nom de domaine).
 
 ## Démarrer
 
