@@ -28,7 +28,7 @@ services:
       - key: LEGAL_FORM
         value: "Entrepreneur individuel (EI)"
       - key: LEGAL_SIREN
-        value: "SIREN 844 587 618, immatriculé au Registre national des entreprises (SIRET du siège 844 587 618 00019)"
+        value: "844 587 618 R.C.S. Bobigny (SIRET du siège 844 587 618 00019)"
       - key: LEGAL_VAT
         value: "TVA non applicable, art. 293 B du CGI"
       - key: LEGAL_DIRECTOR
