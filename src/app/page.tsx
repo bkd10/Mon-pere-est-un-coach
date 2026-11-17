@@ -34,7 +34,12 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
           <p className="muted mt-3">{trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
           {LEGAL.founderLine && <p className="mt-3 text-sm font-bold text-pitch-800">⚽ {LEGAL.founderLine}</p>}
         </div>
-        <img src="/visuel-premiers-pas-foot.webp" alt="Premiers Pas Foot : un parent accroupi montre un exercice sur son téléphone à son enfant en maillot numéro 10. L'application qui vous guide pas à pas pour entraîner votre enfant." width={1206} height={1206} className="mx-auto w-full max-w-md" />
+        <div className="mx-auto flex w-full max-w-sm flex-col items-center rounded-[2rem] bg-pitch-900 px-6 py-10 text-center shadow-card">
+          <img src="/icons/icon.svg" alt="" width={176} height={176} className="h-44 w-44" />
+          <p className="mt-5 font-display text-4xl font-extrabold leading-none text-white">Premiers Pas <span className="text-sun-400">Foot</span></p>
+          <p className="mt-3 font-display font-extrabold text-white">Apprenez · Entraînez · Progressez</p>
+          <p className="mt-4 rounded-full bg-sun-400 px-4 py-2 text-sm font-bold text-ink-900">Guidé pas à pas, même sans expérience</p>
+        </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-5 pb-12"><h2 className="mb-4 text-center font-display text-3xl font-extrabold">À quoi ressemble une séance</h2>
