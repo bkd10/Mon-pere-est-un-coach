@@ -47,14 +47,14 @@ export function Ring({ value, max, label, size = 76 }: { value: number; max: num
   const r = 30, c = 2 * Math.PI * r, pct = max > 0 ? Math.min(1, value / max) : 0;
   return (
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 72 72" className="absolute inset-0 -rotate-90"><circle cx="36" cy="36" r={r} fill="none" stroke="#e8eeeb" strokeWidth="8" /><circle cx="36" cy="36" r={r} fill="none" stroke="#1ca463" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${c * pct} ${c}`} /></svg>
+      <svg viewBox="0 0 72 72" className="absolute inset-0 -rotate-90"><circle cx="36" cy="36" r={r} fill="none" stroke="#e8eeeb" strokeWidth="8" /><circle cx="36" cy="36" r={r} fill="none" stroke="#22408f" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${c * pct} ${c}`} /></svg>
       <div className="text-center leading-none"><div className="font-display text-lg font-extrabold">{value}</div>{label && <div className="text-[10px] font-bold text-ink-500">{label}</div>}</div>
     </div>
   );
 }
 
 // Courbe d'évolution d'un indicateur (un seul enfant, jamais de comparaison).
-export function LineChart({ points, unit, lowerIsBetter = false, color = "#1ca463" }: { points: { date: string; value: number }[]; unit?: string; lowerIsBetter?: boolean; color?: string }) {
+export function LineChart({ points, unit, lowerIsBetter = false, color = "#22408f" }: { points: { date: string; value: number }[]; unit?: string; lowerIsBetter?: boolean; color?: string }) {
   if (points.length === 0) return <div className="grid h-28 place-items-center rounded-2xl bg-ink-50 text-sm text-ink-500">Pas encore de mesure</div>;
   const W = 300, H = 110, pad = 14;
   const vals = points.map((p) => p.value);

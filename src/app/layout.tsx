@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   title: { default: `${APP_NAME} — un pas après l'autre`, template: `%s · ${APP_NAME}` },
   description: "Vous n'avez pas besoin d'être entraîneur pour aider votre enfant à progresser au football. Séances guidées, exercices expliqués, repos respecté.",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/icons/icon.svg", apple: "/icons/icon.svg" },
+  icons: { icon: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
 };
-export const viewport: Viewport = { themeColor: "#0f844f", width: "device-width", initialScale: 1, viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#15285c", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

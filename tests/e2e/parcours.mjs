@@ -26,7 +26,7 @@ const submit = (label) => page.getByRole("button", { name: label }).first().clic
 
 try {
   // 1. Accueil public et inscription
-  await page.goto(BASE); ok("page d'accueil publique", (await text()).includes("Pas besoin d'être entraîneur")); await shot("01-accueil-public");
+  await page.goto(BASE); ok("page d'accueil publique", (await text()).includes("Un parent qui entraîne")); await shot("01-accueil-public");
   await page.goto(`${BASE}/app`); ok("espace parent protégé (redirection vers connexion)", page.url().includes("/connexion"));
   await page.goto(`${BASE}/inscription`);
   await page.fill("#firstName", "Camille"); await page.fill("#email", email); await page.fill("#password", "motdepasse-test-1");

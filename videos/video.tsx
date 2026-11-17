@@ -1,5 +1,6 @@
 // Vidéo verticale « schéma animé » d'un exercice (1080 × 1920), générée image par image.
 // La page expose window.__dur (durée en secondes) et window.__seek(t) : scripts/videos.mjs s'en sert pour filmer.
+import { LOGO_URI } from "../src/content/logo";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
@@ -20,15 +21,15 @@ const push = (d: number, node: React.ReactNode) => { segs.push({ a: t, b: t + d,
 const Label = ({ children, color = "#ffc640" }: { children: React.ReactNode; color?: string }) => <div style={{ font: "800 34px Outfit", letterSpacing: 2, textTransform: "uppercase", color, marginBottom: 14 }}>{children}</div>;
 push(3, <div><Label>Pourquoi cet exercice ?</Label><div style={{ font: "700 46px/1.3 Nunito" }}>{f.why.split(". ")[0].replace(/\.$/, "")}.</div></div>);
 steps.forEach((s, i) => push(3.6, <div style={{ display: "flex", gap: 28, alignItems: "flex-start" }}><div style={{ flex: "none", width: 92, height: 92, borderRadius: 46, background: "#ffc640", color: "#10231b", font: "800 54px/92px Outfit", textAlign: "center" }}>{i + 1}</div><div style={{ font: "700 46px/1.3 Nunito" }}>{s}</div></div>));
-if (f.mistakes[0]) push(4.4, <div><Label color="#ff9d8a">L'erreur fréquente</Label><div style={{ font: "700 42px/1.3 Nunito" }}>{f.mistakes[0]}</div>{f.corrections[0] && <div style={{ font: "800 42px/1.3 Nunito", color: "#aeeac6", marginTop: 18 }}>→ {f.corrections[0]}</div>}</div>);
-push(3.4, <div style={{ textAlign: "center" }}><div style={{ font: "800 56px/1.2 Outfit" }}>La séance complète est gratuite</div><div style={{ font: "700 42px/1.3 Nunito", color: "#aeeac6", marginTop: 16 }}>dans l'application Premiers Pas Foot</div></div>);
+if (f.mistakes[0]) push(4.4, <div><Label color="#ff9d8a">L'erreur fréquente</Label><div style={{ font: "700 42px/1.3 Nunito" }}>{f.mistakes[0]}</div>{f.corrections[0] && <div style={{ font: "800 42px/1.3 Nunito", color: "#b8c8ec", marginTop: 18 }}>→ {f.corrections[0]}</div>}</div>);
+push(3.4, <div style={{ textAlign: "center" }}><div style={{ font: "800 56px/1.2 Outfit" }}>La séance complète est gratuite</div><div style={{ font: "700 42px/1.3 Nunito", color: "#b8c8ec", marginTop: 16 }}>dans l'application Premiers Pas Foot</div></div>);
 const DUR = t;
 
 function Card() {
   return (
-    <div style={{ width: 1080, height: 1920, background: "linear-gradient(180deg,#0b442e 0%,#0d5336 55%,#0b442e 100%)", color: "#fff", position: "relative", overflow: "hidden", fontFamily: "Nunito" }}>
+    <div style={{ width: 1080, height: 1920, background: "linear-gradient(180deg,#101d45 0%,#15285c 55%,#101d45 100%)", color: "#fff", position: "relative", overflow: "hidden", fontFamily: "Nunito" }}>
       <div style={{ position: "absolute", left: 70, top: 150, display: "flex", alignItems: "center", gap: 20 }}>
-        <svg viewBox="0 0 512 512" width="84" height="84"><rect width="512" height="512" rx="112" fill="#0f844f" /><g transform="translate(188 292) rotate(-12) scale(2.05)"><ellipse cx="0" cy="40" rx="30" ry="46" fill="#ffc640"/><ellipse cx="-30" cy="-26" rx="11" ry="14" fill="#ffc640"/><ellipse cx="-10" cy="-42" rx="10" ry="13" fill="#ffc640"/><ellipse cx="10" cy="-44" rx="9" ry="12" fill="#ffc640"/><ellipse cx="28" cy="-34" rx="8" ry="11" fill="#ffc640"/></g><g transform="translate(388 356) rotate(10) scale(1.2)"><ellipse cx="0" cy="40" rx="30" ry="46" fill="#fff"/><ellipse cx="-30" cy="-26" rx="11" ry="14" fill="#fff"/><ellipse cx="-10" cy="-42" rx="10" ry="13" fill="#fff"/><ellipse cx="10" cy="-44" rx="9" ry="12" fill="#fff"/><ellipse cx="28" cy="-34" rx="8" ry="11" fill="#fff"/></g></svg>
+        <img src={LOGO_URI} alt="" width={84} height={84} style={{ borderRadius: 18 }} />
         <div style={{ font: "800 50px Outfit" }}>Premiers Pas Foot</div>
       </div>
       <div style={{ position: "absolute", left: 70, right: 70, top: 280 }}>

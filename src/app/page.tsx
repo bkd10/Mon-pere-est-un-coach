@@ -26,13 +26,18 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
 
       <section className="mx-auto grid max-w-5xl items-center gap-8 px-5 pb-12 pt-6 md:grid-cols-2">
         <div>
-          <span className="chip bg-sun-100 text-ink-900">Pour les parents d'enfants de 4 à 18 ans</span>
-          <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">Pas besoin d'être entraîneur pour aider votre enfant à progresser.</h1>
-          <p className="mt-4 text-lg text-ink-700">Indiquez son âge et son niveau : {APP_NAME} vous dit quoi faire, pourquoi, comment — et quand le laisser se reposer. Dix à vingt minutes, un ballon, vous deux.</p>
+          <span className="chip bg-sun-100 text-ink-900">100 % débutant · pour les parents d'enfants de 4 à 18 ans</span>
+          <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">Un parent qui entraîne… même sans expérience.</h1>
+          <p className="mt-4 text-lg text-ink-700">{APP_NAME} est l'application qui vous guide pas à pas pour entraîner votre enfant : quoi faire, pourquoi, comment — et quand le laisser se reposer. Dix à vingt minutes, un ballon, vous deux.</p>
+          <p className="mt-3 font-display text-lg font-extrabold text-pitch-700">Apprenez · Entraînez · Progressez</p>
           <div className="mt-6 flex flex-wrap gap-3"><Link href={cta} className="btn-primary text-base">Commencer gratuitement</Link><a href="#offres" className="btn-ghost text-base">Voir les offres</a></div>
           <p className="muted mt-3">{trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
           {LEGAL.founderLine && <p className="mt-3 text-sm font-bold text-pitch-800">⚽ {LEGAL.founderLine}</p>}
         </div>
+        <img src="/visuel-premiers-pas-foot.webp" alt="Premiers Pas Foot : un parent accroupi montre un exercice sur son téléphone à son enfant en maillot numéro 10. L'application qui vous guide pas à pas pour entraîner votre enfant." width={1206} height={1206} className="mx-auto w-full max-w-md" />
+      </section>
+
+      <section className="mx-auto max-w-5xl px-5 pb-12"><h2 className="mb-4 text-center font-display text-3xl font-extrabold">À quoi ressemble une séance</h2>
         <div className="mx-auto w-full max-w-sm rounded-[2rem] bg-ink-900 p-3 shadow-card">
           <div className="rounded-[1.5rem] bg-ink-50 p-3">
             <div className="mb-2 text-sm font-bold text-ink-500">Séance du jour · 15 min</div>

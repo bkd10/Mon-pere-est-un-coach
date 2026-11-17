@@ -113,7 +113,7 @@ export default function ExerciseAnimation({ diagram, title, compact = false, con
   const s = build(diagram.kind, diagram.n);
   const toggle = () => { const el = ref.current; if (!el) return; paused ? el.unpauseAnimations() : el.pauseAnimations(); setPaused(!paused); };
   return (
-    <figure className="overflow-hidden rounded-2xl bg-pitch-700">
+    <figure className="overflow-hidden rounded-2xl" style={{ background: "#0d6941" }}>
       <div className="relative">
         <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="block w-full" role="img" aria-label={`Schéma animé : ${title ?? diagram.caption ?? "exercice"}`}>
           <defs><pattern id="stripes" width="40" height="200" patternUnits="userSpaceOnUse"><rect width="20" height="200" fill="#1ca463" /><rect x="20" width="20" height="200" fill="#19985c" /></pattern></defs>

@@ -16,14 +16,14 @@ const html = `<title>Premiers Pas Foot</title>
 <style>
 /* Mise en page : une colonne de la largeur d'un téléphone, navigation fixe en bas, comme dans l'application.
    Aperçu fidèle à l'application, qui n'a qu'un thème clair : les couleurs sont donc fixées explicitement. */
-:root { --bg: #f5f8f6; --fg: #10231b; --accent: #0f844f; --sun: #ffc640; --font-sans: "Nunito", system-ui, sans-serif; --font-display: "Outfit", "Nunito", system-ui, sans-serif; color-scheme: light; }
+:root { --bg: #f5f8f6; --fg: #10231b; --accent: #22408f; --sun: #ffc640; --font-sans: "Nunito", system-ui, sans-serif; --font-display: "Outfit", "Nunito", system-ui, sans-serif; color-scheme: light; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); font-size: 16px; line-height: 1.5; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 25; background: var(--bg); }
 *, ::before, ::after { box-sizing: border-box; border: 0 solid #e8eeeb; }
 h1, h2, p, ul, ol, figure { margin: 0; } ul, ol { padding: 0; list-style: none; } ul.list-disc { list-style: disc; }
 button { font: inherit; color: inherit; background: none; padding: 0; cursor: pointer; text-align: inherit; } input, select { font: inherit; color: inherit; }
-button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #78d9a4; outline-offset: 2px; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #8aa3dd; outline-offset: 2px; }
 svg { display: block; }
 .gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .scroller { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .25rem; }

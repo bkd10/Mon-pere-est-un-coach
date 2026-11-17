@@ -1,6 +1,6 @@
 // Service worker minimal : met en cache la coquille statique, jamais les données personnelles.
-const CACHE = "pp-static-v1";
-self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["/icons/icon.svg", "/manifest.webmanifest", "/hors-ligne.html"]))); self.skipWaiting(); });
+const CACHE = "pp-static-v2";
+self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["/icons/icon-192.png", "/manifest.webmanifest", "/hors-ligne.html"]))); self.skipWaiting(); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener("fetch", (e) => {
   const u = new URL(e.request.url);

@@ -17,7 +17,7 @@ const font = (pkg, file, family, weight) => `@font-face{font-family:${family};fo
 writeFileSync(`${dir}/in.css`, "@tailwind utilities;");
 const tw = execSync(`npx tailwindcss -c ${dir}/tailwind.config.cjs -i ${dir}/in.css --minify`, { cwd: root, stdio: ["ignore", "pipe", "ignore"] }).toString();
 const html = `<!doctype html><meta charset="utf-8"><style>${[["nunito", "nunito-latin-400-normal.woff2", "Nunito", 400], ["nunito", "nunito-latin-700-normal.woff2", "Nunito", 700], ["nunito", "nunito-latin-800-normal.woff2", "Nunito", 800], ["outfit", "outfit-latin-700-normal.woff2", "Outfit", 700], ["outfit", "outfit-latin-800-normal.woff2", "Outfit", 800]].map((a) => font(...a)).join("")}
-html,body{margin:0;background:#0b442e}*{box-sizing:border-box}svg{display:block}figure{margin:0}.pitch button{display:none}${tw}</style><div id="root"></div><script>${r.outputFiles[0].text.replace(/<\/script/g, "<\\/script")}</script>`;
+html,body{margin:0;background:#101d45}*{box-sizing:border-box}svg{display:block}figure{margin:0}.pitch button{display:none}${tw}</style><div id="root"></div><script>${r.outputFiles[0].text.replace(/<\/script/g, "<\\/script")}</script>`;
 writeFileSync(`${dir}/page.html`, html);
 
 // 2. Liste des exercices demandés.
