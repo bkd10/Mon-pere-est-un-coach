@@ -41,6 +41,8 @@ services:
         value: "Union européenne (centre de données de Francfort, Allemagne)"
       - key: LEGAL_EMAIL
         value: "premierspasfoot@gmail.com"
+      - key: LEGAL_HOST_PHONE
+        value: "+1 415-319-8186"  # render.com/terms
       # À renseigner dans le tableau de bord Render (jamais dans le dépôt) :
       - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.premierspasfoot.fr
       - { key: ADMIN_EMAIL, sync: false }
@@ -51,7 +53,6 @@ services:
       - { key: MAIL_FROM, sync: false }
       - { key: LEGAL_ADDRESS, sync: false }
       - { key: LEGAL_PHONE, sync: false }
-      - { key: LEGAL_HOST_PHONE, sync: false }
       - { key: LEGAL_MEDIATOR_NAME, sync: false }
       - { key: LEGAL_MEDIATOR_URL, sync: false }
   - type: cron
