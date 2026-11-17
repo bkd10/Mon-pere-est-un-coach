@@ -22,6 +22,23 @@ services:
         value: Un projet porté par un professionnel du football diplômé.
       - key: GIFT_PRICE_CENTS
         value: "2900"
+      # Éditeur de l'application (informations publiques des mentions légales) :
+      - key: LEGAL_COMPANY
+        value: "Bakary DOUMBIA EI, nom commercial BKD Management"
+      - key: LEGAL_FORM
+        value: "Entrepreneur individuel (EI)"
+      - key: LEGAL_SIREN
+        value: "SIREN 844 587 618, immatriculé au Registre national des entreprises (SIRET du siège 844 587 618 00019)"
+      - key: LEGAL_VAT
+        value: "TVA non applicable, art. 293 B du CGI"
+      - key: LEGAL_DIRECTOR
+        value: "Bakary DOUMBIA"
+      - key: LEGAL_HOST_NAME
+        value: "Render Services, Inc."
+      - key: LEGAL_HOST_ADDRESS
+        value: "525 Brannan Street, Suite 300, San Francisco, CA 94107, États-Unis"
+      - key: LEGAL_DATA_LOCATION
+        value: "Union européenne (centre de données de Francfort, Allemagne)"
       # À renseigner dans le tableau de bord Render (jamais dans le dépôt) :
       - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.premierspasfoot.fr
       - { key: ADMIN_EMAIL, sync: false }
@@ -30,18 +47,10 @@ services:
       - { key: STRIPE_WEBHOOK_SECRET, sync: false }
       - { key: SMTP_URL, sync: false }
       - { key: MAIL_FROM, sync: false }
-      - { key: LEGAL_COMPANY, sync: false }
-      - { key: LEGAL_FORM, sync: false }
       - { key: LEGAL_ADDRESS, sync: false }
-      - { key: LEGAL_SIREN, sync: false }
-      - { key: LEGAL_VAT, sync: false }
-      - { key: LEGAL_DIRECTOR, sync: false }
       - { key: LEGAL_EMAIL, sync: false }
       - { key: LEGAL_PHONE, sync: false }
-      - { key: LEGAL_HOST_NAME, sync: false }
-      - { key: LEGAL_HOST_ADDRESS, sync: false }
       - { key: LEGAL_HOST_PHONE, sync: false }
-      - { key: LEGAL_DATA_LOCATION, sync: false }
       - { key: LEGAL_MEDIATOR_NAME, sync: false }
       - { key: LEGAL_MEDIATOR_URL, sync: false }
   - type: cron
