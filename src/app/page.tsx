@@ -33,7 +33,7 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
           <p className="mt-4 text-lg text-ink-700">{APP_NAME} est l'application qui vous guide pas à pas pour entraîner votre enfant : quoi faire, pourquoi, comment — et quand le laisser se reposer. Dix à vingt minutes, un ballon, vous deux.</p>
           <p className="mt-3 font-display text-lg font-extrabold text-pitch-700">Apprenez · Entraînez · Progressez</p>
           <div className="mt-6 flex flex-wrap gap-3"><Link href={cta} className="btn-primary text-base">Commencer gratuitement</Link><a href="#offres" className="btn-ghost text-base">{open ? "Voir les offres" : "Gratuit au lancement"}</a></div>
-          <p className="muted mt-3">{!open ? "Gratuit pendant le lancement, sans carte bancaire. " : trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
+          <p className="muted mt-3">{!open ? "Toute l'application est gratuite pendant le lancement, sans carte bancaire." : `${trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.`}</p>
           {LEGAL.founderLine && <p className="mt-3 text-sm font-bold text-pitch-800">⚽ {LEGAL.founderLine}</p>}
         </div>
         <div className="mx-auto flex w-full max-w-sm flex-col items-center rounded-[2rem] bg-pitch-900 px-6 py-10 text-center shadow-card">
