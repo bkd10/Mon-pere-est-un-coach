@@ -1,5 +1,6 @@
 // Offres, droits d'accès et valeurs par défaut (les tarifs sont modifiables depuis l'administration).
 import type { PlanTier, Subscription } from "@prisma/client";
+import { salesOpen } from "./flags";
 
 export const DEFAULT_PLANS = [
   { tier: "DECOUVERTE" as PlanTier, name: "Découverte", tagline: "Pour essayer la méthode, sans carte bancaire.", monthlyCents: 0, yearlyCents: 0, trialDays: 0, maxChildren: 1, sort: 0, active: true,
@@ -32,7 +33,8 @@ export function effectiveTier(sub: Subscription | null | undefined, now = new Da
   return "DECOUVERTE";
 }
 export function entitlements(sub: Subscription | null | undefined, now = new Date()): Entitlements {
-  const tier = effectiveTier(sub, now);
+  // Phase de lancement : toute l'application est offerte tant que les ventes sont fermées.
+  const tier = salesOpen() ? effectiveTier(sub, now) : "FAMILLE";
   return { tier, ...E[tier] };
 }
 export const euro = (cents: number) => (cents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" });

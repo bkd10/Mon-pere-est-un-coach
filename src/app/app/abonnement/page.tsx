@@ -1,3 +1,4 @@
+import { salesOpen } from "@/lib/flags";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { cancelSub, resumeSub, useGiftCode, withdrawSub } from "@/app/actions";
@@ -23,6 +24,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
     <div>
       <PageHead title="Mon abonnement" back="/app/menu" />
       {sp.ok && <Notice tone="ok">C'est noté : votre offre est à jour.</Notice>}{sp.cadeau && <Notice tone="ok">🎁 Code cadeau activé : votre abonnement Famille est ouvert, sans aucun prélèvement à la fin.</Notice>}{sp.retracte && <Notice tone="ok">Rétractation enregistrée : l'abonnement est arrêté et le remboursement au prorata est lancé. Une confirmation est disponible dans vos notifications.</Notice>}{sp.resilie && <Notice>Abonnement résilié. Vous gardez l'accès jusqu'à la fin de la période déjà réglée, puis votre compte passe en offre Découverte. Vos données sont conservées.</Notice>}{sp.annule && <Notice>Paiement annulé : rien n'a été débité.</Notice>}{sp.e && <Notice tone="warn">{sp.e}</Notice>}
+      {!salesOpen() && <div className="card mb-5 bg-sun-400 text-ink-900"><div className="font-display text-2xl font-extrabold">🚀 Lancement : tout est offert</div><p className="mt-1">Pendant la phase de lancement, toute l'application vous est offerte : jusqu'à 3 enfants, séances illimitées, tous les exercices et guides. Aucune carte bancaire, aucun prélèvement. Si des offres payantes arrivent, vous serez prévenu à l'avance et rien ne sera facturé sans votre accord.</p></div>}
+      {salesOpen() && <>
       {!stripeEnabled() && <Notice>🧪 <b>Mode démonstration</b> : le paiement en ligne n'est pas encore branché sur cette installation. Choisir une offre l'active immédiatement, sans aucun débit.</Notice>}
       <div className="card mb-5 bg-pitch-700 text-white">
         <div className="text-sm font-bold text-white/90">Offre actuelle</div><div className="font-display text-3xl font-extrabold">{current?.name ?? "Découverte"}</div>
@@ -44,6 +47,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Rec
         </div>
       ); })}</div>
       <p className="muted mt-3 px-1">{/* informations précontractuelles */}Prix TTC. Sans engagement de durée minimale : renouvellement automatique à chaque échéance, résiliable ici même à tout moment. Droit de rétractation de 14 jours. Paiement sécurisé par Stripe ; nous ne stockons aucun numéro de carte. <a href="/cgu" className="font-bold text-pitch-700 underline">Conditions générales</a></p>
+      </>}
       <Section title="J'ai un code cadeau" className="mt-6"><form action={useGiftCode} className="card flex gap-2"><input name="code" required placeholder="PAS-XXXXX-XXXXX" aria-label="Code cadeau" className="input uppercase" autoComplete="off" /><Submit className="btn-primary shrink-0">Activer</Submit></form></Section>
       <Section title="Historique des paiements et factures" className="mt-6">{payments.length === 0 ? <div className="card muted">Aucun paiement pour l'instant.</div> : <ul className="space-y-2">{payments.map((p) => <li key={p.id} className="card flex items-center justify-between py-3 text-sm"><span><b>{p.invoiceNumber}</b><span className="muted block">{fmt(p.createdAt)} · {p.description}</span></span><span className="shrink-0 text-right"><span className={`block font-bold ${p.status === "failed" ? "text-coral-600" : ""}`}>{p.status === "refunded" ? "− " : ""}{euro(p.amountCents)}{p.status === "failed" ? " · échec" : p.status === "refunded" ? " · remboursé" : ""}</span>{p.status !== "failed" && <a href={`/app/abonnement/facture/${p.id}`} className="text-xs font-bold text-pitch-700 underline">{p.status === "refunded" ? "Avoir" : "Facture"}</a>}</span></li>)}</ul>}</Section>
     </div>

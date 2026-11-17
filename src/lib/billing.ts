@@ -1,4 +1,5 @@
 // Abonnements. Avec STRIPE_SECRET_KEY : Stripe Checkout + portail + webhooks.
+import { salesOpen } from "./flags";
 // Sans clé : mode démonstration (aucun débit), clairement signalé dans l'interface.
 import Stripe from "stripe";
 import type { PlanTier } from "@prisma/client";
@@ -17,6 +18,7 @@ export async function nextInvoiceNumber(): Promise<string> {
 }
 
 export async function startCheckout(userId: string, email: string, tier: PlanTier, interval: "month" | "year"): Promise<{ url?: string; demo?: boolean }> {
+  if (!salesOpen()) throw new Error("Ventes fermées pendant la phase de lancement.");
   const plan = await db.plan.findUnique({ where: { tier } });
   if (!plan || !plan.active || tier === "DECOUVERTE") throw new Error("Offre indisponible.");
   const amount = interval === "year" ? plan.yearlyCents : plan.monthlyCents;
@@ -153,6 +155,7 @@ export async function markGiftPaid(giftId: string, provider: string, providerRef
 }
 
 export async function startGiftCheckout(giftId: string): Promise<{ url?: string }> {
+  if (!salesOpen()) throw new Error("Ventes fermées pendant la phase de lancement.");
   const g = await db.giftCode.findUnique({ where: { id: giftId } });
   if (!g) throw new Error("Carte introuvable.");
   if (!stripeEnabled()) { await markGiftPaid(giftId, "demo"); return {}; }

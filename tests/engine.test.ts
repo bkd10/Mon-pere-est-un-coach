@@ -139,7 +139,13 @@ test("le moteur est déterministe pour une même date", () => {
   assert.deepEqual(buildSession(profile(), LIB, hist(), rules, D), buildSession(profile(), LIB, hist(), rules, D));
 });
 
+test("lancement : sans médiateur, ventes fermées et tout est offert", () => {
+  const saved = { ...process.env }; delete process.env.DEMO_SALES; delete process.env.LEGAL_MEDIATOR_NAME; delete process.env.LEGAL_MEDIATOR_URL;
+  try { assert.equal(entitlements(null).tier, "FAMILLE"); assert.equal(entitlements(null).maxChildren, 3); }
+  finally { Object.assign(process.env, saved); }
+});
 test("abonnements : essai expiré et résiliation échue retombent sur Découverte", () => {
+  process.env.DEMO_SALES = "1"; // ventes ouvertes : les règles d'abonnement s'appliquent
   const base = { id: "s", userId: "u", interval: "month", cancelAtPeriodEnd: false, provider: "demo", stripeCustomerId: null, stripeSubscriptionId: null, updatedAt: new Date() };
   const past = new Date(Date.now() - 864e5), future = new Date(Date.now() + 864e5);
   assert.equal(effectiveTier({ ...base, tier: "PREMIUM", status: "TRIALING", trialEndsAt: future, currentPeriodEnd: null }), "PREMIUM");

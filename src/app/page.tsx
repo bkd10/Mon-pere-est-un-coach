@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { getUser } from "@/lib/auth";
 import { euro } from "@/lib/plans";
+import { salesOpen } from "@/lib/flags";
 import { AGE_BANDS, APP_NAME, CATEGORIES } from "@/content/taxonomy";
 import ExerciseAnimation from "@/components/ExerciseAnimation";
 import LegalFooter from "@/components/LegalFooter";
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function Landing({ searchParams }: { searchParams: Promise<{ supprime?: string }> }) {
   const [user, plans, exCount, guideCount, sp] = await Promise.all([getUser(), db.plan.findMany({ where: { active: true }, orderBy: { sort: "asc" } }), db.exercise.count({ where: { published: true } }), db.guide.count({ where: { published: true } }), searchParams]);
   const cta = user ? "/app" : "/inscription";
+  const open = salesOpen();
   const trial = plans.find((p) => p.tier === "FAMILLE")?.trialDays ?? 0;
   return (
     <main id="contenu" className="bg-white">
@@ -30,8 +32,8 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
           <h1 className="mt-3 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">Un parent qui entraîne… même sans expérience.</h1>
           <p className="mt-4 text-lg text-ink-700">{APP_NAME} est l'application qui vous guide pas à pas pour entraîner votre enfant : quoi faire, pourquoi, comment — et quand le laisser se reposer. Dix à vingt minutes, un ballon, vous deux.</p>
           <p className="mt-3 font-display text-lg font-extrabold text-pitch-700">Apprenez · Entraînez · Progressez</p>
-          <div className="mt-6 flex flex-wrap gap-3"><Link href={cta} className="btn-primary text-base">Commencer gratuitement</Link><a href="#offres" className="btn-ghost text-base">Voir les offres</a></div>
-          <p className="muted mt-3">{trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
+          <div className="mt-6 flex flex-wrap gap-3"><Link href={cta} className="btn-primary text-base">Commencer gratuitement</Link><a href="#offres" className="btn-ghost text-base">{open ? "Voir les offres" : "Gratuit au lancement"}</a></div>
+          <p className="muted mt-3">{!open ? "Gratuit pendant le lancement, sans carte bancaire. " : trial > 0 ? `${trial} jours d'essai gratuit, sans carte bancaire. ` : ""}Offre Découverte gratuite, sans limite de durée.</p>
           {LEGAL.founderLine && <p className="mt-3 text-sm font-bold text-pitch-800">⚽ {LEGAL.founderLine}</p>}
         </div>
         <div className="mx-auto flex w-full max-w-sm flex-col items-center rounded-[2rem] bg-pitch-900 px-6 py-10 text-center shadow-card">
@@ -80,9 +82,9 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
 
       <section id="offres" className="bg-pitch-900 py-12 text-white">
         <div className="mx-auto max-w-5xl px-5">
-          <h2 className="font-display text-3xl font-extrabold">Des offres simples, sans engagement</h2>
-          <p className="mt-1 text-white/90">Sans engagement. Résiliation en deux clics depuis l'application.</p>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <h2 className="font-display text-3xl font-extrabold">{open ? "Des offres simples, sans engagement" : "Gratuit pendant le lancement"}</h2>
+          {open ? <p className="mt-1 text-white/90">Sans engagement. Résiliation en deux clics depuis l'application.</p> : <div className="mt-6"><div className="rounded-xl2 bg-sun-400 p-6 text-ink-900"><div className="font-display text-2xl font-extrabold">🚀 Lancement : tout est offert</div><p className="mt-2">Pendant la phase de lancement, toute l'application est gratuite pour les familles : jusqu'à 3 enfants, séances illimitées, tous les exercices et guides. Aucune carte bancaire n'est demandée.</p><p className="mt-2 text-sm">Si des offres payantes arrivent plus tard, vous serez prévenu à l'avance et rien ne vous sera jamais facturé sans votre accord.</p></div></div>}
+          {open && <div className="mt-6 grid gap-4 md:grid-cols-3">
             {plans.map((p) => (
               <div key={p.tier} className={`rounded-xl2 p-5 ${p.tier === "FAMILLE" ? "bg-sun-400 text-ink-900" : "bg-white/10"}`}>
                 <div className="font-display text-xl font-extrabold">{p.name}</div>
@@ -93,13 +95,13 @@ export default async function Landing({ searchParams }: { searchParams: Promise<
               </div>
             ))}
             <div className="rounded-xl2 bg-white/10 p-5"><div className="font-display text-xl font-extrabold">🎁 Carte cadeau</div><div className="mt-1 font-display text-3xl font-extrabold">{euro(giftPriceCents())}</div><div className="text-sm font-semibold opacity-90">paiement unique, 12 mois</div><p className="mt-2 text-sm opacity-90">Une saison de foot en famille à offrir. Aucun renouvellement.</p><Link href="/cadeau" className="btn-sun btn-sm mt-4">Offrir une saison</Link></div>
-          </div>
+          </div>}
           <div className="mt-8 text-center"><Link href={cta} className="btn-sun text-base">Créer mon compte</Link></div>
         </div>
       </section>
 
       <footer className="mx-auto max-w-5xl px-5 py-8 text-sm text-ink-500">
-        <p>{APP_NAME} accompagne les familles ; il ne remplace ni un club, ni un éducateur diplômé, ni un professionnel de santé. <Link href="/guides" className="font-bold text-pitch-700 underline">{guideCount} guides pour les parents</Link> · <Link href="/cadeau" className="font-bold text-pitch-700 underline">Carte cadeau</Link></p>
+        <p>{APP_NAME} accompagne les familles ; il ne remplace ni un club, ni un éducateur diplômé, ni un professionnel de santé. <Link href="/guides" className="font-bold text-pitch-700 underline">{guideCount} guides pour les parents</Link>{open && <> · </>}{open && <Link href="/cadeau" className="font-bold text-pitch-700 underline">Carte cadeau</Link>}</p>
         <LegalFooter className="mt-4" />
       </footer>
     </main>

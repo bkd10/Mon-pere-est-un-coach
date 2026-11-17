@@ -15,6 +15,7 @@ import { addDaysIso, awardBadges, buildFacts, dayDate, ensurePlan, entOf, getLib
 import { buildSession, validateMove } from "@/lib/engine";
 import { encryptJson } from "@/lib/crypto";
 import { narrateWithAI } from "@/lib/coach";
+import { salesOpen } from "@/lib/flags";
 import { cancelSubscription, redeemGift, resumeSubscription, startCheckout, withdrawSubscription, withdrawalWindow } from "@/lib/billing";
 import { sendEmail } from "@/lib/mail";
 import { DOC_VERSIONS } from "@/content/legal";
@@ -460,6 +461,7 @@ export async function deleteAccount(f: FormData) {
 // ───────────── Abonnement ─────────────
 export async function checkout(f: FormData) {
   const user = await requireUser();
+  if (!salesOpen()) redirect("/app/abonnement");
   const tier = str(f, "tier") as PlanTier;
   const interval = str(f, "interval") === "year" ? "year" : "month";
   // Rétractation : le service démarre tout de suite à la demande expresse du consommateur (art. L221-25).

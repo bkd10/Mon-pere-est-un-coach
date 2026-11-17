@@ -1,5 +1,6 @@
 "use server";
 // Actions accessibles sans connexion : mot de passe oublié, achat d'une carte cadeau.
+import { salesOpen } from "@/lib/flags";
 import { redirect } from "next/navigation";
 import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
@@ -36,6 +37,7 @@ export async function resetPassword(f: FormData) {
 }
 
 export async function buyGift(f: FormData) {
+  if (!salesOpen()) redirect("/cadeau");
   const email = str(f, "email").toLowerCase();
   if (!z.string().email().safeParse(email).success) redirect("/cadeau?e=" + encodeURIComponent("Indiquez une adresse e-mail valide : le code cadeau y sera envoyé."));
   if (f.get("cgv") !== "on") redirect("/cadeau?e=" + encodeURIComponent("Merci d'accepter les conditions générales de vente."));
