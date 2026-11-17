@@ -39,6 +39,8 @@ services:
         value: "525 Brannan Street, Suite 300, San Francisco, CA 94107, États-Unis"
       - key: LEGAL_DATA_LOCATION
         value: "Union européenne (centre de données de Francfort, Allemagne)"
+      - key: LEGAL_EMAIL
+        value: "premierspasfoot@gmail.com"
       # À renseigner dans le tableau de bord Render (jamais dans le dépôt) :
       - { key: NEXT_PUBLIC_APP_URL, sync: false }   # ex. https://www.premierspasfoot.fr
       - { key: ADMIN_EMAIL, sync: false }
@@ -48,7 +50,6 @@ services:
       - { key: SMTP_URL, sync: false }
       - { key: MAIL_FROM, sync: false }
       - { key: LEGAL_ADDRESS, sync: false }
-      - { key: LEGAL_EMAIL, sync: false }
       - { key: LEGAL_PHONE, sync: false }
       - { key: LEGAL_HOST_PHONE, sync: false }
       - { key: LEGAL_MEDIATOR_NAME, sync: false }
