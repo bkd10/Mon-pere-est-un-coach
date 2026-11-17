@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { euro } from "@/lib/plans";
-import { DOC_VERSIONS, LEGAL, show } from "@/content/legal";
+import { DOC_VERSIONS, LEGAL, show, mediatorText } from "@/content/legal";
 import { LegalPage, S, UL } from "@/components/LegalPage";
 export const metadata = { title: "Conditions générales" };
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default async function Page() {
       <S t="13. Évolution des prix et des conditions"><p>Toute hausse de prix ou modification substantielle vous est notifiée au moins un mois à l'avance et ne s'applique qu'à la période suivante ; vous pouvez résilier sans frais avant son entrée en vigueur.</p></S>
       <S t="14. Défaut de paiement"><p>En cas d'échec d'un prélèvement, vous êtes prévenu et conservez l'accès pendant 7 jours pour mettre à jour votre moyen de paiement ; à défaut, le compte passe en offre Découverte, sans perte de vos données.</p></S>
       <S t="15. Garantie légale et responsabilité"><p>Vous bénéficiez de la garantie légale de conformité des contenus et services numériques (articles L224-25-12 et suivants du code de la consommation). Notre responsabilité ne saurait être engagée pour un dommage résultant du non-respect des consignes de sécurité ou d'une pratique sans surveillance adulte.</p></S>
-      <S t="16. Réclamations, médiation et droit applicable"><p>Réclamations : {show(LEGAL.email)}. À défaut de solution amiable, vous pouvez saisir gratuitement le médiateur de la consommation : {show(LEGAL.mediatorName)} ({show(LEGAL.mediatorUrl)}). Droit français ; le consommateur peut saisir la juridiction de son domicile.</p></S>
+      <S t="16. Réclamations, médiation et droit applicable"><p>Réclamations : {show(LEGAL.email)}. {mediatorText("À défaut de solution amiable, vous pouvez saisir gratuitement le médiateur de la consommation : ")} Droit français ; le consommateur peut saisir la juridiction de son domicile.</p></S>
     </LegalPage>
   );
 }

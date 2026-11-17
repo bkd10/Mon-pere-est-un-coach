@@ -29,7 +29,10 @@ export const REQUIRED_LEGAL: [keyof typeof LEGAL, string][] = [
   ["director", "Directeur de la publication"], ["email", "E-mail de contact"], ["phone", "Téléphone"], ["hostName", "Hébergeur"], ["hostAddress", "Adresse de l'hébergeur"],
   ["hostPhone", "Téléphone de l'hébergeur"], ["dataLocation", "Localisation des données"], ["mediatorName", "Médiateur de la consommation"], ["mediatorUrl", "Site du médiateur"],
 ];
-export const missingLegal = () => REQUIRED_LEGAL.filter(([k]) => !LEGAL[k]);
+// Le médiateur n'est exigé que pour vendre : pendant la phase de lancement gratuite (ventes fermées), il n'est pas requis.
+const selling = () => Boolean(LEGAL.mediatorName && LEGAL.mediatorUrl) || process.env.DEMO_SALES === "1";
+export const missingLegal = () => REQUIRED_LEGAL.filter(([k]) => !LEGAL[k] && (selling() || !k.startsWith("mediator")));
+export const mediatorText = (pre: string) => LEGAL.mediatorName ? `${pre}${LEGAL.mediatorName} — ${show(LEGAL.mediatorUrl)}${LEGAL.mediatorAddress ? ` — ${LEGAL.mediatorAddress}` : ""}.` : selling() ? `${pre}[À COMPLÉTER].` : "Aucune vente n'est proposée pendant la phase de lancement gratuite. Un médiateur de la consommation sera désigné et indiqué ici avant l'ouverture de toute offre payante.";
 export const show = (v: string) => v || "[À COMPLÉTER]";
 
 // Versions des documents : changer la version oblige les utilisateurs à accepter de nouveau les conditions.
