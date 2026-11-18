@@ -7,7 +7,7 @@ import ExerciseAnimation from "@/components/ExerciseAnimation";
 import Submit from "@/components/Submit";
 import { deleteExercise, saveExercise } from "../../actions";
 
-const KINDS = ["slalom", "zigzag", "circle", "gates", "wall", "target", "square", "ladder", "mirror", "pair", "triangle", "reaction", "juggle", "balance", "free"];
+const KINDS = ["slalom", "zigzag", "circle", "gates", "wall", "target", "square", "ladder", "mirror", "pair", "triangle", "reaction", "juggle", "balance", "sole", "rope", "hop", "walkline", "mobility", "talk", "breath", "free"];
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ e?: string }> }) {
   await requirePerm("content");
   const { id } = await params; const { e: err } = await searchParams;

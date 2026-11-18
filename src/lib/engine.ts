@@ -233,7 +233,7 @@ function eligible(ex: LibExercise, profile: Profile, a: Adapt, history: History,
   if (ex.intensity > a.maxIntensity) return false;
   if (a.excludeAreas.length && (a.excludeAreas.includes("autre") ? ex.bodyAreas.length > 0 && ex.intensity > 1 : ex.bodyAreas.some((b) => a.excludeAreas.includes(b)))) return false;
   const have = profile.modes.sansMateriel ? ["ballon"] : [...profile.equipment, "ballon"];
-  if (!ex.equipment.every((e) => have.includes(e) || (!profile.modes.sansMateriel && (e === "plots" || e === "cerceau" || e === "echelle" || e === "but")))) return false; // plots, repères, but : toujours fabricables
+  if (!ex.equipment.filter((e) => e !== "corde").every((e) => have.includes(e) || (!profile.modes.sansMateriel && (e === "plots" || e === "cerceau" || e === "echelle" || e === "but")))) return false; // plots, repères, but : toujours fabricables
   if (profile.modes.petitEspace && ex.space !== "petit") return false;
   const indoorOnly = profile.places.length > 0 && profile.places.every((x) => x === "interieur");
   if (indoorOnly && !ex.indoorOk) return false;

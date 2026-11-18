@@ -8,7 +8,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     slug: "marelle-du-footballeur", name: "La marelle du footballeur", category: "coordination", age: [4, 8], level: "debutant", difficulty: 1,
     objective: "Enchaîner des appuis un pied, deux pieds, en rythme.", skill: "Coordination des appuis",
     why: "Savoir poser ses pieds où l'on veut est la base de tous les gestes du football.",
-    durationMin: 5, reps: "6 passages", equipment: ["cerceau"], space: "petit", indoorOk: true, parentRole: "joue", intensity: 2, bodyAreas: LEGS,
+    durationMin: 5, reps: "6 passages", equipment: ["cerceau", "ballon"], space: "petit", indoorOk: true, parentRole: "joue", intensity: 2, bodyAreas: LEGS,
     steps: ["Tracez une marelle à la craie (ou posez des repères).", "Un pied dans les cases simples, deux pieds dans les cases doubles.", "Au bout, un ballon l'attend : il le ramène au pied.", "Faites le parcours vous aussi : il adore vous voir essayer."],
     mistakes: ["Il regarde ses pieds en permanence.", "Il se précipite."],
     corrections: ["« Regarde la case suivante, pas celle où tu es. »", "Tapez dans vos mains pour donner un rythme lent."],
@@ -69,7 +69,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Il repose le pied entre chaque ballon.", "Genou d'appui verrouillé."],
     corrections: ["Laissez-lui 2 secondes entre deux lancers.", "« Genou souple, comme un ressort. »"],
     easy: "Il peut reposer le pied entre chaque ballon.", medium: "Sans reposer le pied.", hard: "Renvoi en volée, ou debout sur un coussin.",
-    success: "6 renvois sur 8 sans reposer le pied.", diagram: { kind: "balance", caption: "Genou souple, je renvoie" }, metricKey: "equilibre",
+    success: "6 renvois sur 8 sans reposer le pied.", diagram: { kind: "pair", caption: "Genou souple, je renvoie" }, metricKey: "equilibre",
   },
   {
     slug: "etoile-d-equilibre", name: "L'étoile", category: "equilibre", age: [11, 17], level: "intermediaire", difficulty: 3,
@@ -87,7 +87,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     slug: "le-parcours-des-animaux", name: "Le parcours des animaux", category: "motricite", age: [4, 7], level: "debutant", difficulty: 1,
     objective: "Se déplacer de multiples façons : sauter, ramper, marcher à quatre pattes.", skill: "Motricité générale",
     why: "Un enfant qui sait bouger de mille manières apprendra tous les sports plus facilement, le football compris.",
-    durationMin: 5, reps: "3 parcours", equipment: [], space: "moyen", indoorOk: true, parentRole: "joue", intensity: 2, bodyAreas: ["genou", "dos"],
+    durationMin: 5, reps: "3 parcours", equipment: ["ballon"], space: "moyen", indoorOk: true, parentRole: "joue", intensity: 2, bodyAreas: ["genou", "dos"],
     steps: ["Annoncez un animal : grenouille (sauts), ours (quatre pattes), crabe (sur le côté), kangourou (pieds joints).", "Il traverse la zone en imitant l'animal.", "Au retour, il choisit l'animal et c'est vous qui imitez.", "Terminez par « le guépard qui ramène son ballon »."],
     mistakes: ["Il se lasse si le parcours est toujours le même."],
     corrections: ["Laissez-le inventer un animal à chaque tour."],
@@ -114,7 +114,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Atterrissage bruyant, jambes tendues.", "Genoux qui se touchent."],
     corrections: ["« Je ne dois pas t'entendre atterrir. »", "« Tes genoux regardent tes orteils. »"],
     easy: "Sauts sur place.", medium: "Sauts avant et latéraux.", hard: "Atterrir, puis contrôler une passe que vous donnez aussitôt.",
-    success: "5 atterrissages silencieux et stables sur 6.", recoverySec: 60, diagram: { kind: "balance", caption: "J'atterris comme un chat" }, metricKey: "coordination",
+    success: "5 atterrissages silencieux et stables sur 6.", recoverySec: 60, diagram: { kind: "hop", caption: "J'atterris comme un chat" }, metricKey: "coordination",
   },
   // ───────────── VITESSE ET RÉACTIVITÉ ─────────────
   {
@@ -262,7 +262,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Le parent enchaîne avec « mais… »."],
     corrections: ["Ce moment ne contient aucune critique. Les axes de progrès attendront la prochaine séance."],
     easy: "Une seule réussite, aidé par vos questions.", medium: "Trois réussites.", hard: "Il dit aussi ce qu'il a envie d'essayer la prochaine fois.",
-    success: "Il repart avec au moins une réussite en tête.", diagram: { kind: "pair", caption: "Trois réussites, zéro « mais »" }, metricKey: "confiance", isFree: true,
+    success: "Il repart avec au moins une réussite en tête.", diagram: { kind: "talk", caption: "Trois réussites, zéro « mais »" }, metricKey: "confiance", isFree: true,
   },
   {
     slug: "la-respiration-du-ballon", name: "La respiration du ballon", category: "confiance", age: [6, 17], level: "debutant", difficulty: 1,
@@ -273,7 +273,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Il gonfle la poitrine au lieu du ventre."],
     corrections: ["« Fais monter le ballon comme un ascenseur, tout doucement. »"],
     easy: "Trois respirations.", medium: "Cinq respirations, yeux fermés.", hard: "Il choisit un mot qui l'aide (« calme », « prêt ») et le pense en soufflant.",
-    success: "Il termine plus calme qu'il n'a commencé.", diagram: { kind: "balance", caption: "J'inspire, le ballon monte" }, metricKey: "confiance",
+    success: "Il termine plus calme qu'il n'a commencé.", diagram: { kind: "breath", caption: "J'inspire, le ballon monte" }, metricKey: "confiance",
   },
   {
     slug: "le-defi-rate-volontaire", name: "Le droit de rater", category: "confiance", age: [7, 17], level: "debutant", difficulty: 2,

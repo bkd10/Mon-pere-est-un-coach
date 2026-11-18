@@ -2,7 +2,8 @@
 import { kitOf } from "@/content/taxonomy";
 
 export default function Materiel({ items, compact = false, shopHref }: { items: string[]; compact?: boolean; shopHref?: string }) {
-  const keys = (items.length ? items : ["ballon"]).filter((k, i, a) => a.indexOf(k) === i).sort((a, b) => (a === "ballon" ? -1 : b === "ballon" ? 1 : 0));
+  const keys = items.filter((k, i, a) => a.indexOf(k) === i).sort((a, b) => (a === "ballon" ? -1 : b === "ballon" ? 1 : 0));
+  if (keys.length === 0) return compact ? <p className="text-sm text-ink-700"><b>Matériel :</b> aucun.</p> : <div className="rounded-2xl bg-ink-50 p-3 text-sm"><span className="font-bold">Matériel</span> : aucun, rien à acheter ni à préparer.</div>;
   if (compact) return <p className="text-sm text-ink-700"><b>Matériel :</b> {keys.map((k) => kitOf(k)?.label.toLowerCase() ?? k).join(", ")}.</p>;
   return (
     <div>

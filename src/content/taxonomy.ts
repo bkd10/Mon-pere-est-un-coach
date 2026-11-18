@@ -61,6 +61,7 @@ export const KIT: KitItem[] = [
   { key: "but", label: "Mini-but pliable", icon: "🥅", qty: "1 ou 2", use: "Tirs, finition et petits matchs à la maison.", free: "Deux sacs posés au sol." },
   { key: "cerceau", label: "Cerceaux plats", icon: "⭕", qty: "lot de 4", use: "Cibles au sol, zones d'appui, jeux de précision.", free: "Un cercle tracé à la craie." },
   { key: "echelle", label: "Échelle de rythme", icon: "🪜", qty: "1 (4 à 6 m)", use: "Appuis, coordination et échauffements.", free: "Traits à la craie tous les 40 cm." },
+  { key: "corde", label: "Corde à sauter", icon: "🪢", qty: "1", use: "Rythme, appuis légers et coordination bras-jambes.", free: "Pas de corde ? Il mime le geste, le travail est presque le même." },
   { key: "mur", label: "Rebondisseur", icon: "🧱", qty: "1", use: "Renvoie le ballon pour enchaîner les passes et les contrôles seul.", free: "Un mur de garage ou un muret." },
 ];
 export const kitOf = (k: string) => KIT.find((x) => x.key === k);

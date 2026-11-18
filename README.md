@@ -34,7 +34,7 @@ Prérequis : Node 20+, PostgreSQL 14+. Compte administrateur créé par le seed 
 - **Médias** : démonstrations = schémas animés SVG générés par l'application (`src/components/ExerciseAnimation.tsx`), aucun enfant réel. Photos et vidéos des familles : stockage privé (`storage/`, à remplacer par un stockage objet en production), diffusion authentifiée, partage soumis à double consentement et modération.
 
 ```
-src/content/   référentiel : 7 tranches d'âge, 16 catégories, 126 exercices de base et leurs progressions (1 273 fiches), 22 guides, badges, défis
+src/content/   référentiel : 7 tranches d'âge, 16 catégories, 126 exercices de base et leurs progressions (1 275 fiches), 22 guides, badges, défis
 src/lib/       moteur, services, coach IA, facturation, authentification, chiffrement, offres
 src/app/app/   espace parent (accueil, séances, exercices, progression, calendrier, guide, coach, abonnement…)
 src/app/admin/ back-office (contenus, règles, offres, utilisateurs, modération, statistiques)
@@ -46,7 +46,7 @@ tests/         15 tests du moteur + parcours de bout en bout (53 vérifications)
 1. **Architecture et expérience** : séance lancée en 2 clics depuis l'accueil ; mode « parent débutant » activé par défaut.
 2. **Pages** : 44 routes — accueil public, inscription, profil enfant, tableau de bord, séance guidée, questionnaire, bibliothèque, fiches, progression, mini-évaluations, carnet de développement, calendrier, académie des parents, calculateur de budget, coach, bilans, album, vidéothèque, abonnement, paramètres, notifications, administration.
 3. **Base de données** : utilisateurs, enfants, exercices, séances, retours, mesures, badges, défis, bilans, médias, guides, offres, abonnements, paiements, règles, journal d'audit.
-4. **Bibliothèque et parcours par âge** : 1 273 fiches (126 exercices de base rédigés un par un, déclinés en 18 progressions) ; chaque fiche est complète (objectif, pourquoi, étapes, erreurs, corrections, 3 variantes, critère de réussite, sécurité, récupération, schéma animé) ; repères détaillés pour chaque tranche d'âge.
+4. **Bibliothèque et parcours par âge** : 1 275 fiches (126 exercices de base rédigés un par un, déclinés en 18 progressions) ; chaque fiche est complète (objectif, pourquoi, étapes, erreurs, corrections, 3 variantes, critère de réussite, sécurité, récupération, schéma animé) ; repères détaillés pour chaque tranche d'âge.
 5. **Calendrier et progression** : planification autour du club et des matchs, déplacement contrôlé, évènements (match, vacances, repos) ; 11 indicateurs avec courbes ; 7 mini-évaluations à cibles progressives.
 6. **Adaptation** : fatigue, douleur, plaisir, motivation, confiance, difficulté, sommeil, charge hebdomadaire ; chaque ajustement est expliqué au parent. « Il voulait continuer » n'allonge jamais une séance.
 7. **Abonnement** : 4 offres (Découverte gratuite, Essentiel 3,99 €, Premium 6,99 €, Famille 9,99 € ; annuel réduit), essai configurable, factures, résiliation, reprise, échec de paiement avec 7 jours de grâce, Stripe prêt à brancher.

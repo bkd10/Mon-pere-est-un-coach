@@ -35,7 +35,7 @@ export async function signup(f: FormData) {
   const { firstName, email, password } = parsed.data!;
   if (await db.user.findUnique({ where: { email } })) fail("/inscription", "Un compte existe déjà avec cet e-mail. Connectez-vous.");
   const premium = await db.plan.findUnique({ where: { tier: "FAMILLE" } });
-  const trialDays = premium?.trialDays ?? 7;
+  const trialDays = salesOpen() ? (premium?.trialDays ?? 7) : 0; // lancement gratuit : pas d'essai à décompter, tout est offert
   const user = await db.user.create({ data: {
     firstName, email, passwordHash: await hashPassword(password), consentAt: new Date(), consentVersion: DOC_VERSIONS.privacy, emailMarketing: f.get("marketing") === "on",
     consents: { create: [

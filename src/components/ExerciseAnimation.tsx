@@ -5,7 +5,7 @@ import { useRef, useState, type ReactNode } from "react";
 
 type Pt = [number, number];
 type Mover = { at: Pt; path?: string; keyPoints?: string; keyTimes?: string; begin?: number };
-type Scene = { cones?: Pt[]; kid?: Mover; parent?: Mover; ball?: Mover; trail?: string[]; extra?: ReactNode; dur: number; side?: ReactNode };
+type Scene = { cones?: Pt[]; kid?: Mover; parent?: Mover; ball?: Mover; trail?: string[]; extra?: ReactNode; dur: number; side?: ReactNode; view?: string };
 
 const W = 320, H = 200;
 const line = (pts: Pt[]) => "M" + pts.map((p) => p.join(",")).join(" L");
@@ -14,6 +14,13 @@ const smooth = (pts: Pt[]) => {
   for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; const mx = (x0 + x1) / 2; d += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`; }
   return d;
 };
+
+
+// Personnage de profil ou de face, dessiné en traits (aucun enfant réel) : mêmes couleurs que les autres schémas.
+const SKIN = "#ffd7b0", SHIRT = "#f9a826", PANTS = "#10231b", BALL = <><circle r="11" fill="#fff" stroke="#10231b" strokeWidth="1.5" /><circle r="3.4" fill="#10231b" /></>;
+const L = (d: string, w = 8, c = PANTS) => <path d={d} stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" fill="none" />;
+const anim = (values: string[], dur: number, keyTimes?: number[]) => <animate attributeName="d" values={values.join(";")} {...(keyTimes ? { keyTimes: keyTimes.join(";") } : {})} dur={`${dur}s`} repeatCount="indefinite" />;
+const A = (d: string[], dur: number, kt?: number[], w = 8, c = PANTS) => <path stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" fill="none" d={d[0]}>{anim(d, dur, kt)}</path>;
 
 function build(kind: string, nArg?: number): Scene {
   const n = nArg ?? 5;
@@ -94,6 +101,69 @@ function build(kind: string, nArg?: number): Scene {
           <circle cx="160" cy="60" r="13" fill="#ffd7b0" /><path d="M160 74v52" stroke="#f9a826" strokeWidth="16" strokeLinecap="round" /><path d="M160 84l-34 6M160 84l34 6" stroke="#f9a826" strokeWidth="7" strokeLinecap="round" /><path d="M158 126l2 46" stroke="#10231b" strokeWidth="8" strokeLinecap="round" /><path d="M164 126l22 10l-6 24" stroke="#10231b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" /></g>
         {Array.from({ length: (nArg ?? 0) > 2 ? 5 : 0 }, (_, i) => <circle key={i} cx={100 + i * 30} cy={182 - Math.sin((i / 4) * Math.PI) * 6} r="4" fill="#f2674b" />)}
       </g> };
+    case "sole": { // semelle sur le ballon : il le fait rouler (n = 1 : tap-tap, un pied après l'autre)
+      const tap = nArg === 1;
+      return { dur: 2.4, side: <g>
+        <circle cx="150" cy="60" r="13" fill={SKIN} />{L("M150 74v52", 16, SHIRT)}{L("M150 84l-24 22M150 84l24 18", 7, SHIRT)}
+        {tap ? <g>
+          <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="1.2s" repeatCount="indefinite" />
+            {A(["M148 128L146 172", "M150 128L172 140L192 152", "M148 128L146 172"], 1.2, [0, 0.5, 1])}{A(["M152 128L172 140L192 152", "M152 128L154 172", "M152 128L172 140L192 152"], 1.2, [0, 0.5, 1])}</g>
+          <g transform="translate(198 165)">{BALL}</g>
+        </g> : <g>
+          {L("M146 126L144 172")}{A(["M154 128L172 140L186 152", "M154 128L188 140L210 152", "M154 128L172 140L186 152"], 2.4, [0, 0.5, 1])}
+          <g><animateTransform attributeName="transform" type="translate" values="190 165;214 165;190 165" dur="2.4s" repeatCount="indefinite" />{BALL}</g>
+          <path d="M184 190h38M184 190l6-4M184 190l6 4M222 190l-6-4M222 190l-6 4" stroke="#fff" strokeOpacity=".7" strokeWidth="2" fill="none" strokeLinecap="round" />
+        </g>}
+      </g> };
+    }
+    case "rope": // corde à sauter, vue de face
+      return { dur: 1.2, view: "Vue de face", side: <g>
+        <g><animateTransform attributeName="transform" type="translate" values="0 -16;0 0;0 0;0 0;0 -16" keyTimes="0;0.25;0.5;0.75;1" dur="1.2s" repeatCount="indefinite" />
+          <circle cx="160" cy="60" r="13" fill={SKIN} />{L("M160 74v52", 16, SHIRT)}{L("M160 84L132 104M160 84L188 104", 7, SHIRT)}{L("M155 126L154 172M165 126L166 172")}
+          <circle cx="130" cy="105" r="4" fill="#ffc640" /><circle cx="190" cy="105" r="4" fill="#ffc640" />
+          <path fill="none" stroke="#ffc640" strokeWidth="3" strokeLinecap="round" d="M130 105Q160 285 190 105">{anim(["M130 105Q160 285 190 105", "M130 105Q160 190 190 105", "M130 105Q160 -10 190 105", "M130 105Q160 -50 190 105", "M130 105Q160 -10 190 105", "M130 105Q160 190 190 105", "M130 105Q160 285 190 105"], 1.2, [0, 0.18, 0.32, 0.5, 0.68, 0.82, 1])}</path>
+        </g>
+      </g> };
+    case "hop": { // saut par-dessus un plot, réception genoux fléchis, on tient la position
+      const kt = [0, 0.3, 0.55, 0.85, 1];
+      return { dur: 3.6, side: <g>
+        <path d="M130 176L138 154L146 176z" fill="#f2674b" stroke="#fff" strokeWidth="1" strokeLinejoin="round" />
+        <g><animateTransform attributeName="transform" type="translate" values="0 0;44 -36;96 0;96 0;96 0" keyTimes={kt.join(";")} dur="3.6s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;1;1;0" keyTimes={kt.join(";")} dur="3.6s" repeatCount="indefinite" />
+          <circle cx="86" cy="60" r="13" fill={SKIN} />{L("M86 74v52", 16, SHIRT)}{L("M86 84L66 108M86 84L108 100", 7, SHIRT)}
+          {A(["M84 126L82 172", "M84 126L96 146L88 160", "M84 126L100 150L86 172", "M84 126L100 150L86 172", "M84 126L82 172"], 3.6, kt)}{A(["M90 126L96 172", "M90 126L104 146L96 160", "M90 126L106 150L94 172", "M90 126L106 150L94 172", "M90 126L96 172"], 3.6, kt)}
+        </g>
+      </g> };
+    }
+    case "walkline": // marcher sur une ligne, un pied devant l'autre
+      return { dur: 5, side: <g>
+        <rect x="30" y="173" width="260" height="4" rx="2" fill="#fff" opacity=".9" />
+        <g><animateTransform attributeName="transform" type="translate" values="0 0;170 0" dur="5s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;1;0" keyTimes="0;0.7;0.9;1" dur="5s" repeatCount="indefinite" />
+          <circle cx="70" cy="62" r="13" fill={SKIN} />{L("M70 76v50", 16, SHIRT)}{L("M70 86L36 92M70 86L104 92", 7, SHIRT)}
+          {A(["M66 126L56 172", "M66 126L84 172", "M66 126L56 172"], 1, [0, 0.5, 1])}{A(["M74 126L84 172", "M74 126L56 172", "M74 126L84 172"], 1, [0, 0.5, 1])}
+        </g>
+      </g> };
+    case "mobility": // chevilles : le genou va toucher le mur, le talon reste au sol
+      return { dur: 3, side: <g>
+        <rect x="256" y="60" width="10" height="116" rx="2" fill="#8b9a93" />
+        <circle cx="180" cy="68" r="13" fill={SKIN} />{L("M172 124L178 88", 16, SHIRT)}{L("M178 90L252 100", 7, SHIRT)}{L("M170 124L116 172")}
+        {A(["M172 124L204 142L214 172", "M172 124L246 138L214 172", "M172 124L204 142L214 172"], 3, [0, 0.5, 1])}
+      </g> };
+    case "talk": { // se parler : trois réussites, un rituel, un objectif
+      const star = (x: number, y: number, t: number) => <text x={x} y={y} textAnchor="middle" fontSize="26" fill="#ffc640" opacity="0">★<animate attributeName="opacity" values="0;0;1;1;0" keyTimes={`0;${t};${t + 0.1};0.92;1`} dur="6s" repeatCount="indefinite" /></text>;
+      return { dur: 6, view: "Vue de face", side: <g>
+        <circle cx="104" cy="76" r="15" fill={SKIN} />{L("M104 94V142", 20, "#2372c2")}{L("M98 142V174M110 142V174")}
+        <circle cx="216" cy="98" r="12" fill={SKIN} />{L("M216 112V148", 16, SHIRT)}{L("M211 148V174M221 148V174")}
+        <g transform="translate(160 165)">{BALL}</g>
+        {star(142, 56, 0.1)}{star(160, 36, 0.3)}{star(178, 56, 0.5)}
+      </g> };
+    }
+    case "breath": // la respiration du ballon : le ballon monte et descend sur le ventre
+      return { dur: 10, side: <g>
+        <circle cx="62" cy="160" r="12" fill={SKIN} />{L("M78 166L196 166", 18, SHIRT)}{L("M196 166L220 140L246 166")}
+        <g><animateTransform attributeName="transform" type="translate" values="136 146;136 130;136 146" keyTimes="0;0.4;1" dur="10s" repeatCount="indefinite" />{BALL}</g>
+        <text x="160" y="56" textAnchor="middle" fontSize="20" fontWeight="800" fill="#fff">Inspire…<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.39;0.4;1" dur="10s" repeatCount="indefinite" /></text>
+        <text x="160" y="56" textAnchor="middle" fontSize="20" fontWeight="800" fill="#fff" opacity="0">Souffle…<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.41;1" dur="10s" repeatCount="indefinite" /></text>
+      </g> };
     default: {
       const path = "M50,150 C90,60 140,170 180,90 C210,40 280,80 262,140 C250,180 120,190 50,150";
       return { kid: { at: [50, 150], path, begin: 0.3 }, ball: { at: [50, 150], path }, trail: [path], dur: 7 };
@@ -137,7 +207,7 @@ export default function ExerciseAnimation({ diagram, title, compact = false, con
       {!compact && (
         <figcaption className="flex items-center justify-between gap-3 px-3 py-2 text-xs text-white/90">
           <span className="font-bold">{diagram.caption}</span>
-          <span className="shrink-0 opacity-90">{s.side ? "Vue de côté" : <><b className="text-sun-300">E</b> enfant{s.parent ? <> · <b className="text-sky-100">P</b> parent</> : null}</>}</span>
+          <span className="shrink-0 opacity-90">{s.side ? (s.view ?? "Vue de côté") : <><b className="text-sun-300">E</b> enfant{s.parent ? <> · <b className="text-sky-100">P</b> parent</> : null}</>}</span>
         </figcaption>
       )}
     </figure>

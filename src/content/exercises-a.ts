@@ -1,6 +1,6 @@
 // Bibliothèque d'exercices — partie A (techniques avec ballon).
 // Chaque fiche est complète et sert de source unique au moteur de séances : l'IA ne peut proposer que ces exercices.
-export type DiagramKind = "slalom" | "gates" | "wall" | "juggle" | "target" | "square" | "ladder" | "balance" | "mirror" | "pair" | "triangle" | "free" | "zigzag" | "reaction" | "circle";
+export type DiagramKind = "slalom" | "gates" | "wall" | "juggle" | "target" | "square" | "ladder" | "balance" | "mirror" | "pair" | "triangle" | "free" | "zigzag" | "reaction" | "circle" | "sole" | "rope" | "hop" | "walkline" | "mobility" | "talk" | "breath";
 export type ExerciseSeed = {
   slug: string; name: string; category: string; age: [number, number]; level: "debutant" | "intermediaire" | "confirme"; difficulty: number;
   objective: string; skill: string; why: string; durationMin: number; reps: string; equipment: string[]; space: "petit" | "moyen" | "grand";
@@ -51,7 +51,7 @@ export const EXERCISES_A: ExerciseSeed[] = [
     mistakes: ["Il s'arrête sans bloquer le ballon.", "Il attend le signal sans bouger."],
     corrections: ["« Rouge, c'est la semelle sur le ballon. »", "Bougez avec lui et faites semblant de le rattraper."],
     easy: "Seulement vert et rouge.", medium: "Trois couleurs.", hard: "Ajoutez « bleu » : demi-tour avec la semelle.",
-    success: "Le ballon est bloqué en moins de deux pas à chaque « rouge ».", diagram: { kind: "free", caption: "Vert : j'avance · Rouge : semelle !" }, metricKey: "conduite",
+    success: "Le ballon est bloqué en moins de deux pas à chaque « rouge ».", diagram: { kind: "reaction", caption: "Vert : j'avance · Rouge : semelle !" }, metricKey: "conduite",
   },
   {
     slug: "conduite-tete-levee", name: "Conduite tête levée", category: "conduite", age: [8, 13], level: "intermediaire", difficulty: 3,
