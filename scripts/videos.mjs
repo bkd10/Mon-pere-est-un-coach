@@ -38,7 +38,7 @@ for (const b of list) {
   execFileSync("ffmpeg", ["-v", "error", "-y", "-framerate", String(FPS), "-i", `${frames}/%04d.jpg`, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-movflags", "+faststart", `${out}/${b.slug}.mp4`]);
   rmSync(frames, { recursive: true, force: true });
   // Légende prête à coller avec la vidéo.
-  writeFileSync(`${out}/${b.slug}.txt`, `${b.name} — ${b.objective}\nPour les ${b.age[0]}-${b.age[1]} ans, à faire à la maison avec un parent. La séance complète est gratuite dans l'application Premiers Pas Foot.\n\n#football #foot #entrainementfoot #footenfant #parents #exercicefoot #petitpont\n`);
+  writeFileSync(`${out}/${b.slug}.txt`, `${b.name} — ${b.objective}\nPour les ${b.age[0]}-${b.age[1]} ans, à faire à la maison avec un parent. La séance complète est gratuite dans l'application Premiers Pas Foot.\n\n#football #foot #entrainementfoot #footenfant #parents #exercicefoot #premierspasfoot\n`);
   console.log(`✔ ${b.slug}.mp4 (${dur.toFixed(1)} s)`);
 }
 await browser.close();
