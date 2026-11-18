@@ -1,2 +1,37 @@
-{ "name": "Premiers Pas Foot — un pas après l'autre", "short_name": "Premiers Pas Foot", "description": "Accompagnez votre enfant au football, pas à pas.", "start_url": "/app", "scope": "/", "display": "standalone", "orientation": "portrait", "background_color": "#f5f8f6", "theme_color": "#15285c", "lang": "fr",
-  "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }, { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }] }
+{
+ "name": "Premiers Pas Foot — un pas après l'autre",
+ "short_name": "Premiers Pas Foot",
+ "description": "Accompagnez votre enfant au football, pas à pas.",
+ "start_url": "/app",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#f5f8f6",
+ "theme_color": "#15285c",
+ "lang": "fr",
+ "icons": [
+  {
+   "src": "/icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "id": "/app",
+ "categories": [
+  "sports",
+  "education",
+  "lifestyle"
+ ]
+}
