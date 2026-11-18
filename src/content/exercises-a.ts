@@ -1,6 +1,6 @@
 // Bibliothèque d'exercices — partie A (techniques avec ballon).
 // Chaque fiche est complète et sert de source unique au moteur de séances : l'IA ne peut proposer que ces exercices.
-export type DiagramKind = "slalom" | "gates" | "wall" | "juggle" | "target" | "square" | "ladder" | "balance" | "mirror" | "pair" | "triangle" | "free" | "zigzag" | "reaction" | "circle" | "sole" | "rope" | "hop" | "walkline" | "mobility" | "talk" | "breath";
+export type DiagramKind = "slalom" | "gates" | "wall" | "juggle" | "target" | "square" | "ladder" | "balance" | "mirror" | "pair" | "triangle" | "free" | "zigzag" | "reaction" | "circle" | "sole" | "rope" | "hop" | "walkline" | "mobility" | "talk" | "breath" | "lane" | "shuttle" | "tshape" | "line" | "sidebyside" | "bounce" | "animal" | "fastfeet" | "highknees" | "getup" | "visualize";
 export type ExerciseSeed = {
   slug: string; name: string; category: string; age: [number, number]; level: "debutant" | "intermediaire" | "confirme"; difficulty: number;
   objective: string; skill: string; why: string; durationMin: number; reps: string; equipment: string[]; space: "petit" | "moyen" | "grand";

@@ -67,6 +67,8 @@ function build(kind: string, nArg?: number): Scene {
     }
     case "square": {
       const cones: Pt[] = [[90, 50], [230, 50], [230, 150], [90, 150]];
+      if (nArg === 1) { const path = "M90,150 L90,50 L230,50 L230,150 L90,150"; return { cones, kid: { at: [90, 150], path, begin: 0.2 }, trail: [path], dur: 6 }; }
+      if (nArg === 2) return { cones, kid: { at: [90, 150], path: "M90,150 L90,50 L90,150", keyPoints: "0;0;1;1", keyTimes: "0;0.3;0.5;1" }, parent: { at: [230, 150], path: "M230,150 L230,50 L230,150", keyPoints: "0;0;1;1", keyTimes: "0;0.3;0.5;1" }, ball: { at: [96, 150], path: "M96,150 L224,150 L224,50 L96,50 L96,150" }, trail: ["M96,150 L224,150", "M224,150 L224,50", "M224,50 L96,50"], dur: 6 };
       const path = "M120,130 C140,70 190,70 200,100 C210,130 150,140 140,100 C135,80 100,100 120,130";
       return { cones, kid: { at: [120, 130], path, begin: 0.3 }, ball: { at: [120, 130], path }, parent: { at: [270, 60], path: "M270,60 L270,140 L270,60" }, trail: [path], dur: 6 };
     }
@@ -77,10 +79,15 @@ function build(kind: string, nArg?: number): Scene {
     }
     case "mirror": {
       const k = "M110,130 L210,130 L150,130 L190,130 L110,130", p2 = "M110,70 L210,70 L150,70 L190,70 L110,70";
-      return { kid: { at: [110, 130], path: k, begin: 0.25 }, parent: { at: [110, 70], path: p2 }, ball: { at: [110, 142], path: "M110,146 L210,146 L150,146 L190,146 L110,146", begin: 0.25 }, dur: 6, extra: <path d="M40 100h240" stroke="#fff" strokeOpacity=".6" strokeDasharray="6 6" strokeWidth="2" /> };
+      return { kid: { at: [110, 130], path: k, begin: 0.25 }, parent: { at: [110, 70], path: p2 }, ball: { at: [110, 142], path: "M110,146 L210,146 L150,146 L190,146 L110,146", begin: 0.25 }, dur: 6, extra: <g><path d="M40 100h240" stroke="#fff" strokeOpacity=".6" strokeDasharray="6 6" strokeWidth="2" />{nArg === 2 && <g fill="none" stroke="#fff" strokeWidth="3"><path d="M16 78h12v44H16" /><path d="M304 78h-12v44h12" /></g>}</g> };
     }
-    case "pair":
-      return { kid: { at: [160, 168] }, parent: { at: [160, 32] }, ball: { at: [160, 154], path: "M160,154 L160,46 L160,154" }, trail: ["M160,154 L160,46"], dur: 3.4 };
+    case "pair": {
+      const extra = nArg === 2 ? <path d="M126 100h68" stroke="#f2674b" strokeWidth="7" strokeLinecap="round" /> // obstacle à franchir
+        : nArg === 3 ? <g stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M50 100h220" strokeDasharray="3 6" /><path d="M50 88v24M270 88v24" /></g> // ficelle ou ligne
+        : nArg === 4 ? <path d="M150 44l-10 20M170 44l10 20" stroke="#2372c2" strokeWidth="5" strokeLinecap="round" /> // jambes écartées du parent
+        : nArg === 5 ? <g transform="translate(184 0)"><animateMotion dur="3.4s" repeatCount="indefinite" path="M0,46 L0,154 L0,46" /><circle r="5.5" fill="#fff" stroke="#10231b" strokeWidth="1.2" /><circle r="1.8" fill="#10231b" /></g> : undefined; // deuxième ballon en sens inverse
+      return { kid: { at: [160, 168] }, parent: { at: [160, 32] }, ball: { at: [nArg === 5 ? 140 : 160, 154], path: `M${nArg === 5 ? 140 : 160},154 L${nArg === 5 ? 140 : 160},46 L${nArg === 5 ? 140 : 160},154` }, trail: [`M${nArg === 5 ? 140 : 160},154 L${nArg === 5 ? 140 : 160},46`], dur: 3.4, extra };
+    }
     case "triangle": {
       const cones: Pt[] = [[160, 40], [70, 160], [250, 160]];
       return { cones, parent: { at: [160, 56] }, kid: { at: [82, 146], path: "M82,146 L82,146 L238,146 L238,146 L82,146", keyPoints: "0;0;0.5;0.5;1", keyTimes: "0;0.2;0.5;0.7;1" }, ball: { at: [82, 146], path: "M90,140 L160,66 L230,140 L160,66 L90,140", keyPoints: "0;0.25;0.5;0.75;1", keyTimes: "0;0.2;0.5;0.7;1" }, trail: ["M90,140 L160,66 L230,140"], dur: 6 };
@@ -88,13 +95,15 @@ function build(kind: string, nArg?: number): Scene {
     case "reaction":
       return { cones: [[280, 100]], kid: { at: [80, 100], path: "M80,100 L80,100 L262,100 L80,100", keyPoints: "0;0;0.5;1", keyTimes: "0;0.35;0.6;1" }, parent: { at: [40, 100] }, dur: 5,
         extra: <g><circle cx="160" cy="34" r="14" fill="#ffc640"><animate attributeName="fill" values="#e8eeeb;#e8eeeb;#ffc640;#ffc640;#e8eeeb" keyTimes="0;0.33;0.35;0.6;1" dur="5s" repeatCount="indefinite" /></circle><text x="160" y="39" textAnchor="middle" fontSize="13" fontWeight="800" fill="#10231b">GO</text></g> };
-    case "juggle":
-      return { dur: 1.6, side: <g>
+    case "juggle": {
+      const jug = <g>
         <circle cx="150" cy="62" r="13" fill="#ffd7b0" /><path d="M150 76v52" stroke="#f9a826" strokeWidth="16" strokeLinecap="round" /><path d="M150 84l-22 26M150 84l22 22" stroke="#f9a826" strokeWidth="7" strokeLinecap="round" /><path d="M146 128l-4 44" stroke="#10231b" strokeWidth="8" strokeLinecap="round" />
         <path d="M154 128l16 20" stroke="#10231b" strokeWidth="8" strokeLinecap="round"><animate attributeName="d" values="M154 128l16 20;M154 128l24 6;M154 128l16 20" dur="1.6s" repeatCount="indefinite" /></path>
         <path d="M170 148l14 12" stroke="#10231b" strokeWidth="8" strokeLinecap="round"><animate attributeName="d" values="M170 148l14 12;M178 134l18 2;M170 148l14 12" dur="1.6s" repeatCount="indefinite" /></path>
         <g><circle cx="190" r="9" fill="#fff" stroke="#10231b" strokeWidth="1.5"><animate attributeName="cy" values="148;122;86;122;148" keyTimes="0;0.25;0.5;0.75;1" calcMode="spline" keySplines=".2 .6 .4 1;.2 .6 .4 1;.6 0 .8 .4;.6 0 .8 .4" dur="1.6s" repeatCount="indefinite" /></circle></g>
-      </g> };
+      </g>;
+      return { dur: 1.6, side: nArg === 1 ? <g><animateTransform attributeName="transform" type="translate" values="-50 0;40 0" dur="4.8s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.85;1" dur="4.8s" repeatCount="indefinite" />{jug}</g> : jug };
+    }
     case "balance":
       return { dur: 3, side: <g>
         <g><animateTransform attributeName="transform" type="rotate" values="-3 160 172;3 160 172;-3 160 172" dur="3s" repeatCount="indefinite" />
@@ -163,6 +172,83 @@ function build(kind: string, nArg?: number): Scene {
         <g><animateTransform attributeName="transform" type="translate" values="136 146;136 130;136 146" keyTimes="0;0.4;1" dur="10s" repeatCount="indefinite" />{BALL}</g>
         <text x="160" y="56" textAnchor="middle" fontSize="20" fontWeight="800" fill="#fff">Inspire…<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.39;0.4;1" dur="10s" repeatCount="indefinite" /></text>
         <text x="160" y="56" textAnchor="middle" fontSize="20" fontWeight="800" fill="#fff" opacity="0">Souffle…<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.4;0.41;1" dur="10s" repeatCount="indefinite" /></text>
+      </g> };
+    case "lane": { // conduite en ligne droite : couloir (0), sprint entre deux plots (2), trois zones (3), demi-tour (4), déménageurs (6)
+      const k = nArg ?? 0;
+      if (k === 2) return { cones: [[56, 100], [264, 100]], kid: { at: [56, 100], path: "M56,100 L264,100", keyPoints: "0;0.15;1", keyTimes: "0;0.3;1", begin: 0.2 }, ball: { at: [56, 100], path: "M56,100 L264,100", keyPoints: "0;0.15;1", keyTimes: "0;0.3;1" }, trail: ["M56,100 L264,100"], dur: 3.6 };
+      if (k === 3) return { kid: { at: [30, 100], path: "M30,100 L290,100", keyPoints: "0;0.3;0.7;0.9;0.9", keyTimes: "0;0.33;0.6;0.8;1" }, ball: { at: [30, 100], path: "M30,100 L290,100", keyPoints: "0;0.3;0.7;0.9;0.9", keyTimes: "0;0.33;0.6;0.8;1" }, dur: 6,
+        extra: <g fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle"><path d="M110 50v100M212 50v100" stroke="#fff" strokeDasharray="5 5" strokeWidth="2" /><text x="64" y="44">lent</text><text x="160" y="44">vite</text><text x="258" y="44">stop</text></g> };
+      if (k === 4) { const path = "M60,92 L250,92 C280,92 280,114 250,114 L60,114"; return { cones: [[60, 103], [250, 103]], kid: { at: [60, 92], path, begin: 0.2 }, ball: { at: [60, 92], path }, trail: [path], dur: 5 }; }
+      if (k === 6) return { kid: { at: [64, 100], path: "M64,100 L256,100 L64,100" }, ball: { at: [64, 100], path: "M64,100 L256,100 L64,100" }, trail: ["M64,100 L256,100"], dur: 5,
+        extra: <g><rect x="18" y="66" width="62" height="68" rx="6" fill="#fff" fillOpacity=".18" stroke="#fff" strokeWidth="2" /><rect x="240" y="66" width="62" height="68" rx="6" fill="#fff" fillOpacity=".18" stroke="#fff" strokeWidth="2" />{[[34, 84], [56, 84], [34, 112], [56, 112]].map(([x, y], i) => <rect key={i} x={x} y={y} width="10" height="10" rx="2" fill="#ffc640" />)}</g> };
+      return { kid: { at: [28, 100], path: "M28,100 L298,100", begin: 0.2 }, ball: { at: [28, 100], path: "M28,100 L298,100" }, trail: ["M28,100 L298,100"], dur: 4, extra: <g stroke="#fff" strokeWidth="4" strokeLinecap="round"><path d="M20 76h280M20 124h280" /></g> };
+    }
+    case "shuttle": { // navette : trois plots alignés, aller-retour
+      const path = "M160,100 L250,100 L160,100 L70,100 L160,100";
+      return { cones: [[70, 100], [160, 100], [250, 100]], kid: { at: [160, 100], path }, trail: [path], dur: 5 };
+    }
+    case "tshape": { // parcours en T : course avant, pas chassés, course arrière
+      const path = "M160,172 L160,76 L236,76 L84,76 L160,76 L160,172";
+      return { cones: [[160, 178], [160, 70], [84, 70], [236, 70]], kid: { at: [160, 172], path }, trail: [path], dur: 7 };
+    }
+    case "line": { // plots alignés : pas chassés puis pas croisés, puis le geste
+      const path = "M36,100 L130,100 L250,100";
+      return { cones: [[70, 100], [130, 100], [190, 100], [250, 100]], kid: { at: [36, 100], path, keyPoints: "0;0.45;1", keyTimes: "0;0.5;1" }, ball: { at: [282, 100] }, trail: [path], dur: 5 };
+    }
+    case "sidebyside": // avancer côte à côte en se passant le ballon
+      return { kid: { at: [30, 135], path: "M30,135 L290,135" }, parent: { at: [30, 65], path: "M30,65 L290,65" }, ball: { at: [30, 135], path: "M30,135 L100,65 L170,135 L240,65 L290,135" }, trail: ["M30,135 L100,65 L170,135 L240,65 L290,135"], dur: 6 };
+    case "bounce": // dribble à la main : le ballon rebondit à côté de lui pendant qu'il avance
+      return { dur: 4.8, side: <g>
+        <g><animateTransform attributeName="transform" type="translate" values="-40 0;60 0" dur="4.8s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.85;1" dur="4.8s" repeatCount="indefinite" />
+          <circle cx="140" cy="62" r="13" fill={SKIN} />{L("M140 76v50", 16, SHIRT)}{L("M138 86L122 108", 7, SHIRT)}{A(["M142 86L168 112", "M142 86L166 98", "M142 86L168 112"], 0.6, [0, 0.5, 1], 7, SHIRT)}
+          {A(["M138 126L128 172", "M138 126L152 172", "M138 126L128 172"], 1.2, [0, 0.5, 1])}{A(["M144 126L152 172", "M144 126L128 172", "M144 126L152 172"], 1.2, [0, 0.5, 1])}
+          <g transform="translate(172 0)"><g><animateTransform attributeName="transform" type="translate" values="0 165;0 108;0 165" keyTimes="0;0.5;1" calcMode="spline" keySplines=".2 .6 .4 1;.6 0 .8 .4" dur="0.6s" repeatCount="indefinite" />{BALL}</g></g>
+        </g>
+      </g> };
+    case "animal": // marche de l'ours : mains et pieds au sol, genoux décollés
+      return { dur: 5, side: <g>
+        <g><animateTransform attributeName="transform" type="translate" values="-30 0;80 0" dur="5s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.85;1" dur="5s" repeatCount="indefinite" />
+          {L("M112 108L172 118", 16, SHIRT)}<circle cx="192" cy="112" r="12" fill={SKIN} />
+          {A(["M172 120L184 172", "M172 120L206 172", "M172 120L184 172"], 1.2, [0, 0.5, 1])}{A(["M172 120L206 172", "M172 120L184 172", "M172 120L206 172"], 1.2, [0, 0.5, 1])}
+          {A(["M112 110L98 172", "M112 110L128 172", "M112 110L98 172"], 1.2, [0, 0.5, 1])}{A(["M112 110L128 172", "M112 110L98 172", "M112 110L128 172"], 1.2, [0, 0.5, 1])}
+        </g>
+      </g> };
+    case "fastfeet": // appuis très rapides sur place pendant 5 secondes
+      return { dur: 0.5, side: <g>
+        <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="0.5s" repeatCount="indefinite" />
+          <circle cx="160" cy="62" r="13" fill={SKIN} />{L("M160 76v50", 16, SHIRT)}
+          {A(["M160 88L142 106L156 116", "M160 88L178 102L172 90", "M160 88L142 106L156 116"], 0.5, [0, 0.5, 1], 7, SHIRT)}{A(["M160 88L178 102L172 90", "M160 88L142 106L156 116", "M160 88L178 102L172 90"], 0.5, [0, 0.5, 1], 7, SHIRT)}
+          {A(["M156 126L152 172", "M156 126L166 146L158 156", "M156 126L152 172"], 0.5, [0, 0.5, 1])}{A(["M164 126L172 150L164 158", "M164 126L168 172", "M164 126L172 150L164 158"], 0.5, [0, 0.5, 1])}
+        </g>
+        <text x="258" y="52" textAnchor="middle" fontSize="22" fontWeight="800" fill="#fff">5 s</text>
+      </g> };
+    case "highknees": // gammes de course : montées de genoux en avançant
+      return { dur: 5, side: <g>
+        <g><animateTransform attributeName="transform" type="translate" values="-10 0;170 0" dur="5s" repeatCount="indefinite" /><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.85;1" dur="5s" repeatCount="indefinite" />
+          <circle cx="70" cy="62" r="13" fill={SKIN} />{L("M70 76v50", 16, SHIRT)}
+          {A(["M70 88L88 104L96 92", "M70 88L52 104L44 96", "M70 88L88 104L96 92"], 0.9, [0, 0.5, 1], 7, SHIRT)}{A(["M70 88L52 104L44 96", "M70 88L88 104L96 92", "M70 88L52 104L44 96"], 0.9, [0, 0.5, 1], 7, SHIRT)}
+          {A(["M66 126L98 128L98 156", "M66 126L62 172", "M66 126L98 128L98 156"], 0.9, [0, 0.5, 1])}{A(["M74 126L72 172", "M74 126L106 128L106 156", "M74 126L72 172"], 0.9, [0, 0.5, 1])}
+        </g>
+      </g> };
+    case "getup": // debout-couché : allongé, il se relève au signal et court poser le pied sur le ballon
+      return { dur: 5, side: <g>
+        <g><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.33;0.34;1" dur="5s" repeatCount="indefinite" /><circle cx="52" cy="164" r="11" fill={SKIN} />{L("M64 166L140 166", 14, SHIRT)}{L("M140 166L186 166")}</g>
+        <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.33;0.34;0.92;1" dur="5s" repeatCount="indefinite" /><animateTransform attributeName="transform" type="translate" values="0 0;0 0;150 0;150 0" keyTimes="0;0.34;0.8;1" dur="5s" repeatCount="indefinite" />
+          <circle cx="70" cy="62" r="13" fill={SKIN} />{L("M70 76v50", 16, SHIRT)}{L("M70 86L56 108M70 86L86 104", 7, SHIRT)}
+          {A(["M66 126L58 172", "M66 126L84 172", "M66 126L58 172"], 0.5, [0, 0.5, 1])}{A(["M74 126L84 172", "M74 126L58 172", "M74 126L84 172"], 0.5, [0, 0.5, 1])}
+        </g>
+        <g transform="translate(256 165)">{BALL}</g>
+        <g fill="#ffc640"><circle cx="160" cy="36" r="14"><animate attributeName="fill" values="#e8eeeb;#e8eeeb;#ffc640;#ffc640;#e8eeeb" keyTimes="0;0.3;0.32;0.5;1" dur="5s" repeatCount="indefinite" /></circle></g>
+        <text x="160" y="41" textAnchor="middle" fontSize="12" fontWeight="800" fill="#10231b">GO</text>
+      </g> };
+    case "visualize": // le film dans ma tête : yeux fermés, il se voit réussir son geste
+      return { dur: 4, side: <g>
+        <circle cx="96" cy="64" r="13" fill={SKIN} /><path d="M89 62h6M99 62h6" stroke="#10231b" strokeWidth="2" strokeLinecap="round" />{L("M96 78v48", 16, SHIRT)}{L("M96 88L78 112M96 88L114 112", 7, SHIRT)}{L("M92 126L90 172M100 126L104 172")}
+        <circle cx="122" cy="54" r="4" fill="#fff" fillOpacity=".8" /><circle cx="134" cy="42" r="6" fill="#fff" fillOpacity=".8" />
+        <ellipse cx="226" cy="64" rx="80" ry="46" fill="#fff" fillOpacity=".92" />
+        <g fill="none" stroke="#10231b" strokeWidth="3"><rect x="252" y="46" width="30" height="36" rx="2" /></g>
+        <g><circle r="6" fill="#fff" stroke="#10231b" strokeWidth="1.5"><animateMotion dur="4s" repeatCount="indefinite" path="M186,82 C210,40 250,40 266,62" keyTimes="0;1" /></circle></g>
+        <text x="236" y="102" fontSize="22" fontWeight="800" fill="#1ca463">✓<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.7;0.95;1" dur="4s" repeatCount="indefinite" /></text>
       </g> };
     default: {
       const path = "M50,150 C90,60 140,170 180,90 C210,40 280,80 262,140 C250,180 120,190 50,150";

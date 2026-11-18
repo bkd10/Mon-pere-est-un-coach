@@ -46,7 +46,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Buste qui tourne avec les jambes.", "Dernier appui déséquilibré."],
     corrections: ["« Épaules face à moi, seules les hanches tournent. »", "« Deux petits pas d'ajustement avant la passe. »"],
     easy: "Pas chassés uniquement.", medium: "Chassés puis croisés.", hard: "Remise du pied faible, ou contrôle orienté puis passe.",
-    success: "4 passages fluides conclus par une remise précise.", recoverySec: 45, diagram: { kind: "ladder", caption: "Chassés, croisés, reprise d'appuis" }, metricKey: "coordination",
+    success: "4 passages fluides conclus par une remise précise.", recoverySec: 45, diagram: { kind: "line", caption: "Chassés, croisés, reprise d'appuis" }, metricKey: "coordination",
   },
   // ───────────── ÉQUILIBRE ─────────────
   {
@@ -92,7 +92,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Il se lasse si le parcours est toujours le même."],
     corrections: ["Laissez-le inventer un animal à chaque tour."],
     easy: "Deux animaux, trajets courts.", medium: "Quatre animaux enchaînés.", hard: "Changer d'animal à votre signal en plein trajet.",
-    success: "Il s'engage dans tous les déplacements et en invente un.", diagram: { kind: "free", caption: "Grenouille, ours, crabe, kangourou" }, metricKey: "coordination", isFree: true,
+    success: "Il s'engage dans tous les déplacements et en invente un.", diagram: { kind: "animal", caption: "Grenouille, ours, crabe, kangourou" }, metricKey: "coordination", isFree: true,
   },
   {
     slug: "lancer-attraper", name: "Lancer, rebond, attraper", category: "motricite", age: [4, 8], level: "debutant", difficulty: 1,
@@ -148,14 +148,14 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Première touche trop longue : il perd le ballon.", "Buste redressé dès le départ."],
     corrections: ["« Pousse le ballon avec les lacets, pas trop loin. »", "« Reste penché les trois premiers pas. »"],
     easy: "Sur 6 mètres, à 80 %.", medium: "Sur 10 mètres.", hard: "Départ après une passe reçue en mouvement.",
-    success: "4 accélérations sur 6 terminées ballon bloqué dans la zone.", recoverySec: 60, diagram: { kind: "slalom", n: 2, caption: "Première touche, puis j'accélère" },
+    success: "4 accélérations sur 6 terminées ballon bloqué dans la zone.", recoverySec: 60, diagram: { kind: "lane", n: 2, caption: "Première touche, puis j'accélère" },
   },
   // ───────────── AGILITÉ ─────────────
   {
     slug: "le-miroir", name: "Le miroir", category: "agilite", age: [5, 12], level: "debutant", difficulty: 2,
     objective: "Suivre les déplacements du parent comme un reflet.", skill: "Appuis et changements de direction",
     why: "Imiter un partenaire oblige à observer et à réagir : c'est de l'agilité et de la lecture de jeu à la fois.",
-    durationMin: 4, reps: "4 manches de 20 secondes, 40 secondes de pause", equipment: ["plots"], space: "petit", parentRole: "joue", intensity: 3, bodyAreas: LEGS, safety: SAFE.duo,
+    durationMin: 4, reps: "4 manches de 20 secondes, 40 secondes de pause", equipment: [], space: "petit", parentRole: "joue", intensity: 3, bodyAreas: LEGS, safety: SAFE.duo,
     steps: ["Face à face, séparés par une ligne.", "Vous vous déplacez sur les côtés, il doit rester en face de vous.", "Changez souvent de direction, sans aller trop vite.", "Inversez : il mène, vous suivez."],
     mistakes: ["Il croise les pieds.", "Il regarde vos pieds au lieu de votre buste."],
     corrections: ["« Pas chassés : tes pieds ne se croisent jamais. »", "« Regarde mon ventre : il ne ment pas. »"],
@@ -171,7 +171,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Virages larges.", "Course arrière buste en arrière."],
     corrections: ["« Freine avant le plot, puis repars. »", "« En arrière, reste penché vers l'avant. »"],
     easy: "En trottinant.", medium: "À allure soutenue.", hard: "Avec ballon sur les côtés de course avant.",
-    success: "Un tour propre dans chaque sens, sans toucher de plot.", recoverySec: 45, diagram: { kind: "square", caption: "Avant, chassés, arrière, chassés" },
+    success: "Un tour propre dans chaque sens, sans toucher de plot.", recoverySec: 45, diagram: { kind: "square", n: 1, caption: "Avant, chassés, arrière, chassés" },
   },
   {
     slug: "zigzag-et-freinage", name: "Zigzag et freinage", category: "agilite", age: [12, 17], level: "confirme", difficulty: 4,
@@ -250,7 +250,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Le parent joue trop fort… ou laisse tout passer."],
     corrections: ["Visez un score serré : il doit sentir que ses buts sont mérités."],
     easy: "Vous défendez en marchant.", medium: "Vous jouez à 50 %.", hard: "Il n'a droit qu'à trois touches, ou marque uniquement du pied faible.",
-    success: "Il a tenté des duels et a envie d'une revanche.", recoverySec: 60, diagram: { kind: "mirror", caption: "Du jeu, des duels, des buts" },
+    success: "Il a tenté des duels et a envie d'une revanche.", recoverySec: 60, diagram: { kind: "mirror", n: 2, caption: "Du jeu, des duels, des buts" },
   },
   // ───────────── CONFIANCE ET CONCENTRATION ─────────────
   {
@@ -307,7 +307,7 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Il frappe trop fort."],
     corrections: ["« Le ballon doit rouler, pas voler. »"],
     easy: "À 2 mètres, jambes très écartées.", medium: "À 4 mètres.", hard: "Le tunnel se déplace lentement sur le côté.",
-    success: "5 petits ponts sur 10.", diagram: { kind: "pair", caption: "Le petit pont !" }, metricKey: "passes", isFree: true,
+    success: "5 petits ponts sur 10.", diagram: { kind: "pair", n: 4, caption: "Le petit pont !" }, metricKey: "passes", isFree: true,
   },
   {
     slug: "relais-famille", name: "Le relais de la famille", category: "parent-enfant", age: [5, 14], level: "debutant", difficulty: 2,
@@ -329,6 +329,6 @@ export const EXERCISES_B: ExerciseSeed[] = [
     mistakes: ["Passes faites à l'arrêt.", "Il ne se déplace pas après sa passe."],
     corrections: ["« On n'a pas le droit de passer sans bouger. »", "Montrez-lui où aller en tendant le bras."],
     easy: "Deux touches autorisées, à courte distance.", medium: "Deux touches, en mouvement.", hard: "Une touche, ou pied faible uniquement.",
-    success: "Dix passes enchaînées au moins une fois.", diagram: { kind: "triangle", caption: "On compte ensemble jusqu'à dix" }, metricKey: "passes",
+    success: "Dix passes enchaînées au moins une fois.", diagram: { kind: "sidebyside", caption: "On compte ensemble jusqu'à dix" }, metricKey: "passes",
   },
 ];
